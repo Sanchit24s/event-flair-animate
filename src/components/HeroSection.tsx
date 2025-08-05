@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowRight, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import heroBackground from '@/assets/elegant-venue-hero.jpg';
+// Using uploaded image directly
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -65,7 +65,7 @@ const HeroSection = () => {
         ref={heroRef}
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url(${heroBackground})`,
+          backgroundImage: `url(/lovable-uploads/51be29fe-c0bf-4b38-9209-5b733c9fc311.png)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
