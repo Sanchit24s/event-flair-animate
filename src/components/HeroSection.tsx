@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowRight, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import heroBackground from '@/assets/hero-background.jpg';
+import heroBackground from '@/assets/elegant-venue-hero.jpg';
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -71,7 +71,6 @@ const HeroSection = () => {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="absolute inset-0 bg-navy/70 backdrop-blur-[1px]"></div>
       </div>
 
       {/* Content */}
