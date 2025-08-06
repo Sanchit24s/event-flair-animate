@@ -21,11 +21,11 @@ const Navigation = () => {
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+
       gsap.registerPlugin(ScrollTrigger);
 
       // Navigation entrance animation
-      gsap.fromTo(navRef.current, 
+      gsap.fromTo(navRef.current,
         { y: -100, opacity: 0 },
         { y: 0, opacity: 1, duration: 1, ease: "power3.out", delay: 0.2 }
       );
@@ -37,8 +37,8 @@ const Navigation = () => {
         end: "bottom bottom",
         onUpdate: (self) => {
           if (navRef.current) {
-            navRef.current.style.backgroundColor = self.progress > 0 
-              ? 'rgba(10, 14, 35, 0.95)' 
+            navRef.current.style.backgroundColor = self.progress > 0
+              ? 'rgba(10, 14, 35, 0.95)'
               : 'rgba(10, 14, 35, 0.7)';
           }
         }
@@ -70,9 +70,9 @@ const Navigation = () => {
   const toggleMenu = async () => {
     const { gsap } = await import('gsap');
     setIsMenuOpen(!isMenuOpen);
-    
+
     if (!isMenuOpen) {
-      gsap.fromTo('.mobile-menu', 
+      gsap.fromTo('.mobile-menu',
         { x: '100%', opacity: 0 },
         { x: '0%', opacity: 1, duration: 0.4, ease: "power3.out" }
       );
@@ -80,10 +80,10 @@ const Navigation = () => {
   };
 
   return (
-    <nav 
+    <nav
       ref={navRef}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{ 
+      style={{
         backgroundColor: 'rgba(10, 14, 35, 0.7)',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
@@ -94,7 +94,7 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <h1 className="font-playfair text-2xl lg:text-3xl font-bold text-white">
-              Inspire<span className="text-gold">Events</span>
+              Namah <span className="text-gold">Events</span>
             </h1>
           </div>
 
@@ -105,16 +105,14 @@ const Navigation = () => {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
-                  className={`font-inter px-3 py-2 text-sm font-medium transition-all duration-300 relative group ${
-                    activeSection === id 
-                      ? 'text-gold' 
+                  className={`font-inter px-3 py-2 text-sm font-medium transition-all duration-300 relative group ${activeSection === id
+                      ? 'text-gold'
                       : 'text-white hover:text-gold'
-                  }`}
+                    }`}
                 >
                   {label}
-                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-gold transform origin-left transition-transform duration-300 ${
-                    activeSection === id ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                  }`}></span>
+                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-gold transform origin-left transition-transform duration-300 ${activeSection === id ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                    }`}></span>
                 </button>
               ))}
             </div>
@@ -142,11 +140,10 @@ const Navigation = () => {
               <button
                 key={id}
                 onClick={() => scrollToSection(id)}
-                className={`block w-full text-left px-3 py-3 font-inter text-base font-medium transition-colors duration-300 ${
-                  activeSection === id 
-                    ? 'text-gold bg-gold/10' 
+                className={`block w-full text-left px-3 py-3 font-inter text-base font-medium transition-colors duration-300 ${activeSection === id
+                    ? 'text-gold bg-gold/10'
                     : 'text-white hover:text-gold hover:bg-white/5'
-                }`}
+                  }`}
               >
                 {label}
               </button>

@@ -53,12 +53,12 @@ const Footer = () => {
                   onClick={() => scrollToSection('hero')}
                   className="text-2xl font-playfair font-bold text-white hover:text-gold transition-colors duration-300"
                 >
-                  Elegant Events
+                  Namah <span className="text-gold">Events</span>
                 </button>
               </div>
-              
+
               <p className="text-white/80 mb-6 leading-relaxed">
-                Creating extraordinary experiences through meticulous planning and flawless execution. 
+                Creating extraordinary experiences through meticulous planning and flawless execution.
                 Your vision, our expertise, unforgettable memories.
               </p>
 
@@ -123,20 +123,20 @@ const Footer = () => {
                     <p>Suite 456, New York, NY 10001</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center">
                   <Phone className="w-5 h-5 text-gold mr-3" />
-                  <a 
+                  <a
                     href="tel:+15551234567"
                     className="text-white/80 hover:text-gold transition-colors duration-300"
                   >
                     +1 (555) 123-4567
                   </a>
                 </div>
-                
+
                 <div className="flex items-center">
                   <Mail className="w-5 h-5 text-gold mr-3" />
-                  <a 
+                  <a
                     href="mailto:info@elegantevents.com"
                     className="text-white/80 hover:text-gold transition-colors duration-300"
                   >
@@ -175,7 +175,7 @@ const Footer = () => {
                 <Heart className="w-4 h-4 text-gold mx-1 fill-current" />
                 <span>for creating memorable experiences.</span>
               </div>
-              
+
               <div className="flex space-x-6 text-sm">
                 <a href="#" className="text-white/60 hover:text-gold transition-colors duration-300">
                   Privacy Policy
