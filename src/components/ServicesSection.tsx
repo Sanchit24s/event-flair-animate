@@ -1,14 +1,14 @@
-import { useEffect, useRef } from 'react';
-import { ArrowRight, Heart, Building2, PartyPopper, Camera, Utensils, Lightbulb } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useEffect, useRef, useState } from 'react';
+import { Heart, Building2, PartyPopper, Camera, Utensils, Lightbulb } from 'lucide-react';
 import weddingEvent from '@/assets/wedding-event.jpg';
 import corporateEvent from '@/assets/corporate-event.jpg';
 import privateParty from '@/assets/private-party.jpg';
 
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
+  const serviceCardsRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const [activeService, setActiveService] = useState(0);
 
   useEffect(() => {
     const loadGSAP = async () => {
@@ -17,38 +17,73 @@ const ServicesSection = () => {
       
       gsap.registerPlugin(ScrollTrigger);
 
-      // Animate cards with stagger effect
-      gsap.fromTo(cardsRef.current?.children || [],
-        { opacity: 0, y: 80, scale: 0.9 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "back.out(1.7)",
+      // Animate service cards on scroll
+      if (serviceCardsRef.current?.children) {
+        gsap.fromTo(serviceCardsRef.current.children,
+          { opacity: 0, x: -50, y: 30 },
+          {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: serviceCardsRef.current,
+              start: "top 80%",
+              end: "bottom 20%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+
+      // Animate preview image with parallax effect
+      if (imageRef.current) {
+        gsap.fromTo(imageRef.current,
+          { opacity: 0, scale: 1.1 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: imageRef.current,
+              start: "top 80%",
+              end: "bottom 20%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+
+        // Parallax effect on scroll
+        gsap.to(imageRef.current, {
+          y: -50,
+          ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 70%",
-            end: "bottom 30%",
-            toggleActions: "play none none reverse"
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
           }
-        }
-      );
+        });
+      }
     };
 
     loadGSAP();
   }, []);
 
-  const mainServices = [
+  const services = [
     {
-      title: "Weddings",
+      number: "01",
+      title: "Wedding Planning",
       description: "From intimate ceremonies to grand celebrations, we create wedding experiences that reflect your unique love story with impeccable attention to detail.",
       image: weddingEvent,
       icon: Heart,
       features: ["Venue Selection", "Decor & Design", "Vendor Coordination", "Day-of Management"]
     },
     {
+      number: "02",
       title: "Corporate Events",
       description: "Professional gatherings that make lasting impressions. From conferences to product launches, we deliver events that align with your business objectives.",
       image: corporateEvent,
@@ -56,26 +91,70 @@ const ServicesSection = () => {
       features: ["Conference Planning", "Team Building", "Product Launches", "Awards Ceremonies"]
     },
     {
+      number: "03",
       title: "Private Parties",
       description: "Celebrate life's special moments with style. Birthday parties, anniversaries, and milestone celebrations crafted to create unforgettable memories.",
       image: privateParty,
       icon: PartyPopper,
       features: ["Birthday Celebrations", "Anniversary Parties", "Milestone Events", "Social Gatherings"]
+    },
+    {
+      number: "04",
+      title: "Photography & Videography",
+      description: "Professional documentation of your special moments with cinematic quality and artistic vision.",
+      image: weddingEvent,
+      icon: Camera,
+      features: ["Event Photography", "Videography", "Live Streaming", "Post-Production"]
+    },
+    {
+      number: "05",
+      title: "Catering Services",
+      description: "Exquisite culinary experiences tailored to your taste, featuring world-class chefs and premium ingredients.",
+      image: corporateEvent,
+      icon: Utensils,
+      features: ["Custom Menus", "Dietary Accommodations", "Service Staff", "Bar Services"]
+    },
+    {
+      number: "06",
+      title: "Lighting & Production",
+      description: "Atmospheric lighting and technical production services that transform your venue into an extraordinary space.",
+      image: privateParty,
+      icon: Lightbulb,
+      features: ["Stage Lighting", "Audio Systems", "Visual Effects", "Technical Support"]
     }
   ];
 
-  const additionalServices = [
-    { icon: Camera, title: "Photography & Videography", description: "Professional documentation of your special moments" },
-    { icon: Utensils, title: "Catering Services", description: "Exquisite culinary experiences tailored to your taste" },
-    { icon: Lightbulb, title: "Lighting & Production", description: "Atmospheric lighting and technical production services" }
-  ];
+  const handleServiceHover = (index: number) => {
+    if (activeService !== index) {
+      setActiveService(index);
+      
+      // Animate image change
+      if (imageRef.current) {
+        const gsap = require('gsap').gsap;
+        gsap.to(imageRef.current, {
+          opacity: 0,
+          scale: 1.05,
+          duration: 0.3,
+          ease: "power2.out",
+          onComplete: () => {
+            gsap.to(imageRef.current, {
+              opacity: 1,
+              scale: 1,
+              duration: 0.4,
+              ease: "power2.out"
+            });
+          }
+        });
+      }
+    }
+  };
 
   return (
-    <section id="services" ref={sectionRef} className="section-padding bg-muted/30">
-      <div className="container-custom">
+    <section id="services" ref={sectionRef} className="py-20 bg-background">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="font-playfair text-4xl lg:text-5xl font-bold text-navy mb-6">
+        <div className="text-center mb-20">
+          <h2 className="font-playfair text-5xl lg:text-6xl font-bold text-foreground mb-6">
             Our Premium 
             <span className="text-gold"> Services</span>
           </h2>
@@ -85,72 +164,131 @@ const ServicesSection = () => {
           </p>
         </div>
 
-        {/* Main Services Grid */}
-        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {mainServices.map((service, index) => (
-            <Card key={index} className="group overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white">
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/20 to-transparent"></div>
-                <div className="absolute top-4 left-4 p-3 rounded-full bg-white/20 backdrop-blur-sm">
-                  <service.icon className="h-6 w-6 text-white" />
+        {/* Two Column Layout */}
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          {/* Left Column - Service Cards */}
+          <div ref={serviceCardsRef} className="space-y-8">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className={`group cursor-pointer transition-all duration-500 ${
+                  activeService === index ? 'scale-105' : 'hover:scale-102'
+                }`}
+                onMouseEnter={() => handleServiceHover(index)}
+              >
+                <div className="flex items-start space-x-6 p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
+                  {/* Service Number */}
+                  <div className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl transition-all duration-300 ${
+                    activeService === index 
+                      ? 'bg-gold text-white shadow-lg shadow-gold/25' 
+                      : 'bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold'
+                  }`}>
+                    {service.number}
+                  </div>
+                  
+                  {/* Service Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <service.icon className={`h-6 w-6 transition-colors duration-300 ${
+                        activeService === index ? 'text-gold' : 'text-muted-foreground group-hover:text-gold'
+                      }`} />
+                      <h3 className={`font-playfair text-2xl font-semibold transition-colors duration-300 ${
+                        activeService === index ? 'text-gold' : 'text-foreground group-hover:text-gold'
+                      }`}>
+                        {service.title}
+                      </h3>
+                    </div>
+                    
+                    <p className="text-muted-foreground leading-relaxed mb-4">
+                      {service.description}
+                    </p>
+                    
+                    {/* Features */}
+                    <div className="grid grid-cols-2 gap-2">
+                      {service.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center text-sm">
+                          <div className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors duration-300 ${
+                            activeService === index ? 'bg-gold' : 'bg-muted-foreground group-hover:bg-gold'
+                          }`}></div>
+                          <span className="text-muted-foreground">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Right Column - Preview Image */}
+          <div className="lg:sticky lg:top-8">
+            <div 
+              ref={imageRef}
+              className="relative h-[600px] rounded-3xl overflow-hidden shadow-2xl"
+            >
+              <img
+                src={services[activeService].image}
+                alt={services[activeService].title}
+                className="w-full h-full object-cover transition-all duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent"></div>
               
-              <CardHeader className="pb-4">
-                <CardTitle className="font-playfair text-2xl text-navy group-hover:text-gold transition-colors duration-300">
-                  {service.title}
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground leading-relaxed">
-                  {service.description}
-                </p>
-                
-                <div className="space-y-2">
-                  {service.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center text-sm">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gold mr-3"></div>
-                      <span className="text-muted-foreground">{feature}</span>
-                    </div>
-                  ))}
+              {/* Overlay Content */}
+              <div className="absolute bottom-8 left-8 right-8">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    {React.createElement(services[activeService].icon, { 
+                      className: "h-6 w-6 text-white" 
+                    })}
+                  </div>
+                  <div className="text-white font-playfair text-3xl font-bold">
+                    {services[activeService].title}
+                  </div>
                 </div>
-                
-                <Button 
-                  variant="ghost" 
-                  className="text-gold hover:text-gold-dark group mt-4 p-0 h-auto font-semibold"
-                >
-                  Learn More 
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Additional Services */}
-        <div className="border-t border-border pt-16">
-          <h3 className="font-playfair text-3xl font-bold text-navy text-center mb-12">
-            Additional Services
-          </h3>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {additionalServices.map((service, index) => (
-              <div key={index} className="text-center group">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gold/10 text-gold mb-6 group-hover:bg-gold group-hover:text-white transition-all duration-300 group-hover:scale-110">
-                  <service.icon size={32} />
+        {/* Mobile Layout - Stacked */}
+        <div className="lg:hidden mt-16">
+          <div className="space-y-12">
+            {services.map((service, index) => (
+              <div key={index} className="space-y-6">
+                <div className="relative h-64 rounded-2xl overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                        {React.createElement(service.icon, { 
+                          className: "h-5 w-5 text-white" 
+                        })}
+                      </div>
+                      <div className="text-white font-playfair text-xl font-bold">
+                        {service.title}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h4 className="font-playfair text-xl font-semibold text-navy mb-3 group-hover:text-gold transition-colors duration-300">
-                  {service.title}
-                </h4>
-                <p className="text-muted-foreground">
-                  {service.description}
-                </p>
+                
+                <div className="p-6 bg-card rounded-2xl border border-border/50">
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    {service.description}
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {service.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gold mr-3"></div>
+                        <span className="text-muted-foreground">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
