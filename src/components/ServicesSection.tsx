@@ -74,43 +74,49 @@ const ServicesSection = () => {
         </div>
 
         {/* Services Grid */}
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {services.map((service, index) => (
             <div
               key={index}
-              className="relative group overflow-hidden rounded-3xl h-[400px] shadow-2xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-2"
+              className="relative group overflow-hidden rounded-2xl h-[280px] shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
             >
               {/* Background Image */}
               <div className="absolute inset-0">
                 <img
                   src={service.image}
                   alt={service.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
               
-              {/* Dark Overlay */}
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-300"></div>
-              
-              {/* Curved Gold Accent */}
-              <div className="absolute top-0 left-0 w-2/3 h-full">
-                <div className="relative w-full h-full bg-black/80 rounded-r-[100px] flex items-center justify-start pl-8 pr-16">
-                  {/* Gold curved border */}
-                  <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-gold via-gold to-transparent rounded-full"></div>
+              {/* Curved Dark Overlay */}
+              <div className="absolute top-0 left-0 w-3/5 h-full">
+                <div className="relative w-full h-full bg-black/85 flex items-center justify-start pl-6 pr-8"
+                     style={{
+                       clipPath: 'polygon(0 0, 75% 0, 85% 100%, 0 100%)'
+                     }}>
                   
                   <div className="text-white">
                     {/* Icon */}
-                    <div className="mb-6">
-                      <service.icon className="h-12 w-12 text-gold" strokeWidth={1.5} />
+                    <div className="mb-4">
+                      <service.icon className="h-8 w-8 text-gold" strokeWidth={1.5} />
                     </div>
                     
                     {/* Title */}
-                    <h3 className="font-bold text-2xl lg:text-3xl leading-tight tracking-wide">
+                    <h3 className="font-bold text-xl lg:text-2xl leading-tight tracking-wide">
                       {service.title}
                     </h3>
                   </div>
                 </div>
               </div>
+              
+              {/* Gold accent line */}
+              <div 
+                className="absolute top-0 left-0 w-3/5 h-full border-r-2 border-gold/30"
+                style={{
+                  clipPath: 'polygon(0 0, 75% 0, 85% 100%, 0 100%)'
+                }}
+              ></div>
             </div>
           ))}
         </div>
