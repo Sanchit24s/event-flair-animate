@@ -58,7 +58,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" ref={sectionRef} className="section-padding bg-background">
+    <section id="about" ref={sectionRef} className="pb-20 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image */}
