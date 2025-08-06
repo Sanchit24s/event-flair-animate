@@ -107,7 +107,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="hero" className="relative h-screen flex items-center overflow-hidden">
       {/* Background Image with Parallax */}
       <div 
         ref={heroRef}
