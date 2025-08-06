@@ -17,7 +17,7 @@ const ServicesSection = () => {
 
       gsap.registerPlugin(ScrollTrigger);
 
-      // Animate service cards on scroll
+      // Animate service cards on initial load
       if (serviceCardsRef.current?.children) {
         gsap.fromTo(serviceCardsRef.current.children,
           { opacity: 0, x: -50, y: 30 },
@@ -38,35 +38,74 @@ const ServicesSection = () => {
         );
       }
 
-      // Animate preview image with parallax effect
-      if (imageRef.current) {
+      // Pin image and update on service scroll
+      if (imageRef.current && serviceCardsRef.current) {
+        const services = Array.from(serviceCardsRef.current.children);
+        const totalServices = services.length;
+
+        services.forEach((service, index) => {
+          ScrollTrigger.create({
+            trigger: service,
+            start: "top 60%", // Start when service enters viewport
+            end: "bottom 60%",
+            onEnter: () => updateImage(index),
+            onEnterBack: () => updateImage(index),
+            onLeave: () => { }, // Handle leaving if needed
+            onLeaveBack: () => { }, // Handle leaving back if needed
+            // markers: true
+          });
+        });
+
+        // Pin the image during service scroll
+        ScrollTrigger.create({
+          trigger: serviceCardsRef.current,
+          start: "top 20%", // Start pinning when services enter
+          end: () => `+=${serviceCardsRef.current.offsetHeight / 1.4}`, // End after all services
+          pin: imageRef.current,
+          pinSpacing: true,
+          scrub: true,
+          anticipatePin: 1
+        });
+
+        // Animate image on scroll
         gsap.fromTo(imageRef.current,
-          { opacity: 0, scale: 1.1 },
+          { opacity: 0, scale: 0.9, y: 50 },
           {
             opacity: 1,
             scale: 1,
-            duration: 1,
+            y: 0,
+            duration: 1.2,
             ease: "power2.out",
             scrollTrigger: {
               trigger: imageRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play none none reverse"
+              start: "top 80%", // Start animation when top of image hits 80% of viewport
+              end: "top 20%", // End when image is near the top
+              toggleActions: "play none none reverse" // Play on enter, reverse on leave
             }
           }
         );
 
-        // Parallax effect on scroll
-        gsap.to(imageRef.current, {
-          y: -50,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1
-          }
-        });
+        // Function to handle smooth image transition
+        function updateImage(index: any) {
+          gsap.to(imageRef.current, {
+            opacity: 0,
+            scale: 0.95,
+            duration: 0.5,
+            ease: "power2.inOut",
+            onComplete: () => {
+              setActiveService(index); // Update active service after fade out
+              gsap.fromTo(imageRef.current,
+                { opacity: 0, scale: 0.95 },
+                {
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.5,
+                  ease: "power2.inOut"
+                }
+              );
+            }
+          });
+        }
       }
     };
 
@@ -124,31 +163,6 @@ const ServicesSection = () => {
     }
   ];
 
-  const handleServiceHover = (index: number) => {
-    if (activeService !== index) {
-      setActiveService(index);
-
-      // Animate image change
-      if (imageRef.current) {
-        const gsap = require('gsap').gsap;
-        gsap.to(imageRef.current, {
-          opacity: 0,
-          scale: 1.05,
-          duration: 0.3,
-          ease: "power2.out",
-          onComplete: () => {
-            gsap.to(imageRef.current, {
-              opacity: 1,
-              scale: 1,
-              duration: 0.4,
-              ease: "power2.out"
-            });
-          }
-        });
-      }
-    }
-  };
-
   return (
     <section id="services" ref={sectionRef} className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -173,13 +187,12 @@ const ServicesSection = () => {
                 key={index}
                 className={`group cursor-pointer transition-all duration-500 ${activeService === index ? 'scale-105' : 'hover:scale-102'
                   }`}
-                onMouseEnter={() => handleServiceHover(index)}
               >
                 <div className="flex items-start space-x-6 p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
                   {/* Service Number */}
                   <div className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl transition-all duration-300 ${activeService === index
-                      ? 'bg-gold text-white shadow-lg shadow-gold/25'
-                      : 'bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold'
+                    ? 'bg-gold text-white shadow-lg shadow-gold/25'
+                    : 'bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold'
                     }`}>
                     {service.number}
                   </div>
@@ -219,7 +232,7 @@ const ServicesSection = () => {
           <div className="lg:sticky lg:top-8">
             <div
               ref={imageRef}
-              className="relative h-[600px] rounded-3xl overflow-hidden shadow-2xl"
+              className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl"
             >
               <img
                 src={services[activeService].image}
