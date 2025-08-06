@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowRight, Calendar, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import heroBackground from '@/assets/hero-background.webp';
 // Using uploaded luxury venue image
 
 const HeroSection = () => {
@@ -14,58 +15,58 @@ const HeroSection = () => {
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+
       gsap.registerPlugin(ScrollTrigger);
 
       // Hero entrance animation timeline
       const tl = gsap.timeline({ delay: 0.8 });
-      
+
       // Animate headline with split effect
-      tl.fromTo(headlineRef.current, 
+      tl.fromTo(headlineRef.current,
         { opacity: 0, y: 100, scale: 0.8 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          scale: 1, 
-          duration: 1.4, 
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.4,
           ease: "power3.out",
         }
       )
-      // Animate subheading
-      .fromTo(sublineRef.current,
-        { opacity: 0, y: 60 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 1, 
-          ease: "power3.out" 
-        },
-        "-=0.8"
-      )
-      // Animate buttons with stagger
-      .fromTo(buttonsRef.current?.children || [],
-        { opacity: 0, y: 40, scale: 0.8 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          scale: 1, 
-          duration: 0.8, 
-          stagger: 0.2, 
-          ease: "back.out(1.4)" 
-        },
-        "-=0.6"
-      )
-      // Animate scroll indicator
-      .fromTo(scrollIndicatorRef.current,
-        { opacity: 0, y: 30 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 0.6, 
-          ease: "power2.out" 
-        },
-        "-=0.4"
-      );
+        // Animate subheading
+        .fromTo(sublineRef.current,
+          { opacity: 0, y: 60 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out"
+          },
+          "-=0.8"
+        )
+        // Animate buttons with stagger
+        .fromTo(buttonsRef.current?.children || [],
+          { opacity: 0, y: 40, scale: 0.8 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "back.out(1.4)"
+          },
+          "-=0.6"
+        )
+        // Animate scroll indicator
+        .fromTo(scrollIndicatorRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out"
+          },
+          "-=0.4"
+        );
 
       // Parallax effect for background
       gsap.to(heroRef.current, {
@@ -107,82 +108,76 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="hero" className="relative h-screen w-full flex items-center overflow-hidden">
-      {/* Background Image with Parallax */}
-      <div 
-        ref={heroRef}
-        className="absolute top-0 left-0 w-full h-full z-0 will-change-transform"
-        style={{
-          backgroundImage: `url('/lovable-uploads/10d21a65-ac44-445e-af10-4a712e93815b.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center center',
-          backgroundRepeat: 'no-repeat',
-          minHeight: '100vh',
-          minWidth: '100vw'
-        }}
-      />
+    <section id="hero" className="relative min-h-screen w-full flex items-center overflow-hidden"
+      style={{
+        backgroundImage: `url(${heroBackground})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}>
 
       {/* Left-side gradient overlay for contrast */}
-      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black via-black/80 to-transparent to-[60%]"></div>
 
       {/* Hero Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <div className="text-center lg:text-left lg:max-w-3xl flex items-center min-h-[80vh]">
           <div className="w-full">
             {/* Main Headline */}
-            <h1 
+            <h1
               ref={headlineRef}
-              className="font-playfair text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
-              style={{ 
-                textShadow: '0 6px 24px rgba(0,0,0,0.8), 0 3px 12px rgba(0,0,0,0.6)' 
+              className="font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-3 leading-snug"
+              style={{
+                textShadow: '0 4px 16px rgba(0,0,0,0.7), 0 2px 6px rgba(0,0,0,0.5)'
               }}
             >
               Extraordinary Events
               <span className="block text-gold-light mt-2">Crafted to Perfection</span>
             </h1>
-            
+
             {/* Subheading */}
-            <p 
+            <p
               ref={sublineRef}
-              className="font-inter text-lg sm:text-xl md:text-2xl font-semibold text-white/90 mb-12 max-w-2xl leading-relaxed"
-              style={{ 
-                textShadow: '0 4px 16px rgba(0,0,0,0.7)',
-                filter: 'blur(0.3px)'
+              className="font-inter text-sm sm:text-base md:text-lg font-normal text-white/80 mb-8 max-w-lg leading-relaxed"
+              style={{
+                textShadow: '0 3px 12px rgba(0,0,0,0.5)',
+                filter: 'blur(0.2px)'
               }}
             >
               Luxury weddings, corporate galas, and celebrations that exceed every expectation
             </p>
 
             {/* CTA Buttons */}
-            <div 
-              ref={buttonsRef} 
+            <div
+              ref={buttonsRef}
               className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center"
             >
-              <Button 
+              <Button
                 onClick={() => scrollToSection('contact')}
-                size="lg"
-                className="gold-gradient text-navy font-medium px-12 py-7 text-lg tracking-wide hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-gold/50 border-0 uppercase"
+                size="sm"
+                className="gold-gradient text-navy font-medium px-6 py-3 text-sm tracking-wide transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-gold/40 border-0 uppercase"
               >
                 Get Started
-                <ArrowRight className="ml-3 h-5 w-5" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              
-              <Button 
+
+              <Button
                 onClick={() => scrollToSection('services')}
                 variant="outline"
-                size="lg"
-                className="border-2 border-white/90 text-white bg-white/5 backdrop-blur-sm hover:bg-white hover:text-navy px-12 py-7 text-lg font-medium tracking-wide transition-all duration-300 shadow-xl hover:scale-105 hover:shadow-white/30 uppercase"
+                size="sm"
+                className="border border-white/70 text-white bg-white/5 backdrop-blur-sm hover:bg-white hover:text-navy px-6 py-3 text-sm font-medium tracking-wide transform transition-all duration-300 shadow hover:scale-105 hover:shadow-white/20 uppercase"
               >
-                <Calendar className="mr-3 h-5 w-5" />
+                <Calendar className="mr-2 h-4 w-4" />
                 Explore Services
               </Button>
+
             </div>
           </div>
         </div>
       </div>
 
       {/* Scroll Indicator */}
-      <div 
+      <div
         ref={scrollIndicatorRef}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/80 cursor-pointer group"
         onClick={() => scrollToSection('about')}

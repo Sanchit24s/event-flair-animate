@@ -10,7 +10,7 @@ const AboutSection = () => {
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+
       gsap.registerPlugin(ScrollTrigger);
 
       // Animate content on scroll
@@ -64,14 +64,14 @@ const AboutSection = () => {
           {/* Image */}
           <div ref={imageRef} className="relative">
             <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
-              <img 
+              <img
                 src="https://images.unsplash.com/photo-1519167758481-83f29c8bb5ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                 alt="Elegant event setup"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-navy/20 to-transparent"></div>
             </div>
-            
+
             {/* Floating stats */}
             <div className="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-xl p-6 max-w-xs glass-effect">
               <div className="text-center">
@@ -85,20 +85,20 @@ const AboutSection = () => {
           <div ref={contentRef} className="space-y-8">
             <div>
               <h2 className="font-playfair text-4xl lg:text-5xl font-bold text-navy mb-6 leading-tight">
-                Creating Moments That 
+                Creating Moments That
                 <span className="text-gold"> Last Forever</span>
               </h2>
-              
+
               <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
                 <p>
-                  For over 15 years, Elegant Events has been the trusted partner for those who 
-                  demand excellence in event planning. We believe that every celebration deserves 
+                  For over 15 years, Elegant Events has been the trusted partner for those who
+                  demand excellence in event planning. We believe that every celebration deserves
                   to be extraordinary.
                 </p>
-                
+
                 <p>
-                  Our team of experienced professionals brings creativity, attention to detail, 
-                  and flawless execution to every project. From intimate gatherings to grand 
+                  Our team of experienced professionals brings creativity, attention to detail,
+                  and flawless execution to every project. From intimate gatherings to grand
                   celebrations, we craft experiences that reflect your unique vision.
                 </p>
               </div>

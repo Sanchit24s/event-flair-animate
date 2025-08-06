@@ -17,7 +17,7 @@ const Index = () => {
       const Lenis = (await import('lenis')).default;
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+
       gsap.registerPlugin(ScrollTrigger);
 
       const lenis = new Lenis({
@@ -44,7 +44,7 @@ const Index = () => {
     };
 
     const cleanup = initSmoothScrolling();
-    
+
     return () => {
       cleanup.then(cleanupFn => cleanupFn?.());
     };
