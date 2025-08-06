@@ -107,18 +107,18 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="hero" className="relative h-screen flex items-center overflow-hidden">
+    <section id="hero" className="relative h-screen w-full flex items-center overflow-hidden">
       {/* Background Image with Parallax */}
       <div 
         ref={heroRef}
-        className="absolute inset-0 z-0 will-change-transform"
+        className="absolute top-0 left-0 w-full h-full z-0 will-change-transform"
         style={{
           backgroundImage: `url('/lovable-uploads/10d21a65-ac44-445e-af10-4a712e93815b.png')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',
-          width: '100%',
-          height: '100%'
+          minHeight: '100vh',
+          minWidth: '100vw'
         }}
       />
 
