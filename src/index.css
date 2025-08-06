@@ -42,11 +42,11 @@ All colors MUST be HSL.
     --navy: 217 33% 17%;
     --navy-light: 217 25% 25%;
     --navy-dark: 217 40% 12%;
-    
+
     --gold: 35 35% 65%;
     --gold-light: 35 40% 75%;
     --gold-dark: 35 30% 55%;
-    
+
     --rose: 25 25% 80%;
     --rose-light: 25 30% 90%;
     --rose-dark: 25 20% 70%;
@@ -94,11 +94,11 @@ All colors MUST be HSL.
     --navy: 217 33% 17%;
     --navy-light: 217 25% 25%;
     --navy-dark: 217 40% 12%;
-    
+
     --gold: 35 35% 65%;
     --gold-light: 35 40% 75%;
     --gold-dark: 35 30% 55%;
-    
+
     --rose: 25 25% 80%;
     --rose-light: 25 30% 90%;
     --rose-dark: 25 20% 70%;
@@ -119,12 +119,23 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     @apply bg-background text-foreground font-inter;
     scroll-behavior: smooth;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-playfair;
   }
 
@@ -179,11 +190,14 @@ All colors MUST be HSL.
   }
 
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
   }
 }
