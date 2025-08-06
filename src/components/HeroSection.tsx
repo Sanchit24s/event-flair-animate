@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowRight, Calendar, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import luxuryVenueHero from '@/assets/luxury-venue-hero.jpg';
+// Using uploaded luxury venue image
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -113,7 +113,7 @@ const HeroSection = () => {
         ref={heroRef}
         className="absolute inset-0 z-0 will-change-transform"
         style={{
-          backgroundImage: `url(${luxuryVenueHero})`,
+          backgroundImage: `url('/lovable-uploads/10d21a65-ac44-445e-af10-4a712e93815b.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
