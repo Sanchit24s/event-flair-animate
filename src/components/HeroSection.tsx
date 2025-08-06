@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowRight, Calendar, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import luxuryVenueHero from '@/assets/luxury-venue-hero.jpg';
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -112,66 +113,69 @@ const HeroSection = () => {
         ref={heroRef}
         className="absolute inset-0 z-0 will-change-transform"
         style={{
-          backgroundImage: `url(/lovable-uploads/51be29fe-c0bf-4b38-9209-5b733c9fc311.png)`,
+          backgroundImage: `url(${luxuryVenueHero})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           backgroundAttachment: 'fixed'
         }}
-      >
-        {/* Dark overlay for text visibility */}
-        <div className="absolute inset-0 bg-black/40"></div>
-      </div>
+      />
+
+      {/* Left-side gradient overlay for contrast */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
 
       {/* Hero Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-        <div className="text-center lg:text-left lg:max-w-4xl">
-          {/* Main Headline */}
-          <h1 
-            ref={headlineRef}
-            className="font-playfair text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-white mb-6 leading-tight"
-            style={{ 
-              textShadow: '0 8px 32px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4)' 
-            }}
-          >
-            Crafting Experiences
-            <span className="block text-gold mt-2">That Inspire</span>
-          </h1>
-          
-          {/* Subheading */}
-          <p 
-            ref={sublineRef}
-            className="font-inter text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white/95 mb-12 max-w-4xl leading-relaxed"
-            style={{ 
-              textShadow: '0 4px 16px rgba(0,0,0,0.5)' 
-            }}
-          >
-            Weddings, Corporate Events, and Celebrations — Planned to Perfection
-          </p>
-
-          {/* CTA Buttons */}
-          <div 
-            ref={buttonsRef} 
-            className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center"
-          >
-            <Button 
-              onClick={() => scrollToSection('contact')}
-              size="lg"
-              className="gold-gradient text-navy font-semibold px-10 py-6 text-lg hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-gold/50 border-0"
+        <div className="text-center lg:text-left lg:max-w-3xl flex items-center min-h-[80vh]">
+          <div className="w-full">
+            {/* Main Headline */}
+            <h1 
+              ref={headlineRef}
+              className="font-playfair text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+              style={{ 
+                textShadow: '0 6px 24px rgba(0,0,0,0.8), 0 3px 12px rgba(0,0,0,0.6)' 
+              }}
             >
-              Get Started
-              <ArrowRight className="ml-3 h-6 w-6" />
-            </Button>
+              Extraordinary Events
+              <span className="block text-gold-light mt-2">Crafted to Perfection</span>
+            </h1>
             
-            <Button 
-              onClick={() => scrollToSection('services')}
-              variant="outline"
-              size="lg"
-              className="border-2 border-white/80 text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-navy px-10 py-6 text-lg transition-all duration-300 shadow-xl hover:scale-105 hover:shadow-white/20"
+            {/* Subheading */}
+            <p 
+              ref={sublineRef}
+              className="font-inter text-lg sm:text-xl md:text-2xl font-semibold text-white/90 mb-12 max-w-2xl leading-relaxed"
+              style={{ 
+                textShadow: '0 4px 16px rgba(0,0,0,0.7)',
+                filter: 'blur(0.3px)'
+              }}
             >
-              <Calendar className="mr-3 h-6 w-6" />
-              Explore Services
-            </Button>
+              Luxury weddings, corporate galas, and celebrations that exceed every expectation
+            </p>
+
+            {/* CTA Buttons */}
+            <div 
+              ref={buttonsRef} 
+              className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center"
+            >
+              <Button 
+                onClick={() => scrollToSection('contact')}
+                size="lg"
+                className="gold-gradient text-navy font-medium px-12 py-7 text-lg tracking-wide hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-gold/50 border-0 uppercase"
+              >
+                Get Started
+                <ArrowRight className="ml-3 h-5 w-5" />
+              </Button>
+              
+              <Button 
+                onClick={() => scrollToSection('services')}
+                variant="outline"
+                size="lg"
+                className="border-2 border-white/90 text-white bg-white/5 backdrop-blur-sm hover:bg-white hover:text-navy px-12 py-7 text-lg font-medium tracking-wide transition-all duration-300 shadow-xl hover:scale-105 hover:shadow-white/30 uppercase"
+              >
+                <Calendar className="mr-3 h-5 w-5" />
+                Explore Services
+              </Button>
+            </div>
           </div>
         </div>
       </div>
