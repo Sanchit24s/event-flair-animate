@@ -1,39 +1,72 @@
-import React, { useEffect, useRef } from 'react';
-import { Heart, Building2, Palette, Star } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Heart, Building2, PartyPopper, Camera, Utensils, Lightbulb } from 'lucide-react';
 import weddingEvent from '@/assets/wedding-event.jpg';
 import corporateEvent from '@/assets/corporate-event.jpg';
 import privateParty from '@/assets/private-party.jpg';
 
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
+  const serviceCardsRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const [activeService, setActiveService] = useState(0);
 
   useEffect(() => {
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+
       gsap.registerPlugin(ScrollTrigger);
 
       // Animate service cards on scroll
-      if (cardsRef.current?.children) {
-        gsap.fromTo(cardsRef.current.children,
-          { opacity: 0, y: 60, scale: 0.9 },
+      if (serviceCardsRef.current?.children) {
+        gsap.fromTo(serviceCardsRef.current.children,
+          { opacity: 0, x: -50, y: 30 },
           {
             opacity: 1,
+            x: 0,
             y: 0,
-            scale: 1,
             duration: 0.8,
-            stagger: 0.2,
+            stagger: 0.15,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: cardsRef.current,
+              trigger: serviceCardsRef.current,
               start: "top 80%",
               end: "bottom 20%",
               toggleActions: "play none none reverse"
             }
           }
         );
+      }
+
+      // Animate preview image with parallax effect
+      if (imageRef.current) {
+        gsap.fromTo(imageRef.current,
+          { opacity: 0, scale: 1.1 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: imageRef.current,
+              start: "top 80%",
+              end: "bottom 20%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+
+        // Parallax effect on scroll
+        gsap.to(imageRef.current, {
+          y: -50,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
       }
     };
 
@@ -42,26 +75,79 @@ const ServicesSection = () => {
 
   const services = [
     {
-      title: "WEDDING PLANNING",
+      number: "01",
+      title: "Wedding Planning",
+      description: "From intimate ceremonies to grand celebrations, we create wedding experiences that reflect your unique love story with impeccable attention to detail.",
       image: weddingEvent,
       icon: Heart,
+      features: ["Venue Selection", "Decor & Design", "Vendor Coordination", "Day-of Management"]
     },
     {
-      title: "CORPORATE EVENTS",
+      number: "02",
+      title: "Corporate Events",
+      description: "Professional gatherings that make lasting impressions. From conferences to product launches, we deliver events that align with your business objectives.",
       image: corporateEvent,
       icon: Building2,
+      features: ["Conference Planning", "Team Building", "Product Launches", "Awards Ceremonies"]
     },
     {
-      title: "DECOR STYLING",
+      number: "03",
+      title: "Private Parties",
+      description: "Celebrate life's special moments with style. Birthday parties, anniversaries, and milestone celebrations crafted to create unforgettable memories.",
       image: privateParty,
-      icon: Palette,
+      icon: PartyPopper,
+      features: ["Birthday Celebrations", "Anniversary Parties", "Milestone Events", "Social Gatherings"]
     },
     {
-      title: "ENTERTAINMENT",
+      number: "04",
+      title: "Photography & Videography",
+      description: "Professional documentation of your special moments with cinematic quality and artistic vision.",
       image: weddingEvent,
-      icon: Star,
+      icon: Camera,
+      features: ["Event Photography", "Videography", "Live Streaming", "Post-Production"]
+    },
+    {
+      number: "05",
+      title: "Catering Services",
+      description: "Exquisite culinary experiences tailored to your taste, featuring world-class chefs and premium ingredients.",
+      image: corporateEvent,
+      icon: Utensils,
+      features: ["Custom Menus", "Dietary Accommodations", "Service Staff", "Bar Services"]
+    },
+    {
+      number: "06",
+      title: "Lighting & Production",
+      description: "Atmospheric lighting and technical production services that transform your venue into an extraordinary space.",
+      image: privateParty,
+      icon: Lightbulb,
+      features: ["Stage Lighting", "Audio Systems", "Visual Effects", "Technical Support"]
     }
   ];
+
+  const handleServiceHover = (index: number) => {
+    if (activeService !== index) {
+      setActiveService(index);
+
+      // Animate image change
+      if (imageRef.current) {
+        const gsap = require('gsap').gsap;
+        gsap.to(imageRef.current, {
+          opacity: 0,
+          scale: 1.05,
+          duration: 0.3,
+          ease: "power2.out",
+          onComplete: () => {
+            gsap.to(imageRef.current, {
+              opacity: 1,
+              scale: 1,
+              duration: 0.4,
+              ease: "power2.out"
+            });
+          }
+        });
+      }
+    }
+  };
 
   return (
     <section id="services" ref={sectionRef} className="py-20 bg-background">
@@ -69,56 +155,138 @@ const ServicesSection = () => {
         {/* Header */}
         <div className="text-center mb-20">
           <h2 className="font-playfair text-5xl lg:text-6xl font-bold text-foreground mb-6">
-            Our Services
+            Our Premium
+            <span className="text-gold"> Services</span>
           </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            We specialize in creating extraordinary experiences across a range of event types,
+            each crafted with meticulous attention to detail and personalized service.
+          </p>
         </div>
 
-        {/* Services Grid */}
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="relative group overflow-hidden rounded-2xl h-[280px] shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
-            >
-              {/* Background Image */}
-              <div className="absolute inset-0">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-              
-              {/* Curved Dark Overlay */}
-              <div className="absolute top-0 left-0 w-3/5 h-full">
-                <div className="relative w-full h-full bg-black/85 flex items-center justify-start pl-6 pr-8"
-                     style={{
-                       clipPath: 'polygon(0 0, 75% 0, 85% 100%, 0 100%)'
-                     }}>
-                  
-                  <div className="text-white">
-                    {/* Icon */}
-                    <div className="mb-4">
-                      <service.icon className="h-8 w-8 text-gold" strokeWidth={1.5} />
+        {/* Two Column Layout */}
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          {/* Left Column - Service Cards */}
+          <div ref={serviceCardsRef} className="space-y-8">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className={`group cursor-pointer transition-all duration-500 ${activeService === index ? 'scale-105' : 'hover:scale-102'
+                  }`}
+                onMouseEnter={() => handleServiceHover(index)}
+              >
+                <div className="flex items-start space-x-6 p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
+                  {/* Service Number */}
+                  <div className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl transition-all duration-300 ${activeService === index
+                      ? 'bg-gold text-white shadow-lg shadow-gold/25'
+                      : 'bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold'
+                    }`}>
+                    {service.number}
+                  </div>
+
+                  {/* Service Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <service.icon className={`h-6 w-6 transition-colors duration-300 ${activeService === index ? 'text-gold' : 'text-muted-foreground group-hover:text-gold'
+                        }`} />
+                      <h3 className={`font-playfair text-2xl font-semibold transition-colors duration-300 ${activeService === index ? 'text-gold' : 'text-foreground group-hover:text-gold'
+                        }`}>
+                        {service.title}
+                      </h3>
                     </div>
-                    
-                    {/* Title */}
-                    <h3 className="font-bold text-xl lg:text-2xl leading-tight tracking-wide">
-                      {service.title}
-                    </h3>
+
+                    <p className="text-muted-foreground leading-relaxed mb-4">
+                      {service.description}
+                    </p>
+
+                    {/* Features */}
+                    <div className="grid grid-cols-2 gap-2">
+                      {service.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center text-sm">
+                          <div className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors duration-300 ${activeService === index ? 'bg-gold' : 'bg-muted-foreground group-hover:bg-gold'
+                            }`}></div>
+                          <span className="text-muted-foreground">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-              
-              {/* Gold accent line */}
-              <div 
-                className="absolute top-0 left-0 w-3/5 h-full border-r-2 border-gold/30"
-                style={{
-                  clipPath: 'polygon(0 0, 75% 0, 85% 100%, 0 100%)'
-                }}
-              ></div>
+            ))}
+          </div>
+
+          {/* Right Column - Preview Image */}
+          <div className="lg:sticky lg:top-8">
+            <div
+              ref={imageRef}
+              className="relative h-[600px] rounded-3xl overflow-hidden shadow-2xl"
+            >
+              <img
+                src={services[activeService].image}
+                alt={services[activeService].title}
+                className="w-full h-full object-cover transition-all duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent"></div>
+
+              {/* Overlay Content */}
+              <div className="absolute bottom-8 left-8 right-8">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    {React.createElement(services[activeService].icon, {
+                      className: "h-6 w-6 text-white"
+                    })}
+                  </div>
+                  <div className="text-white font-playfair text-3xl font-bold">
+                    {services[activeService].title}
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* Mobile Layout - Stacked */}
+        <div className="lg:hidden mt-16">
+          <div className="space-y-12">
+            {services.map((service, index) => (
+              <div key={index} className="space-y-6">
+                <div className="relative h-64 rounded-2xl overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                        {React.createElement(service.icon, {
+                          className: "h-5 w-5 text-white"
+                        })}
+                      </div>
+                      <div className="text-white font-playfair text-xl font-bold">
+                        {service.title}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-card rounded-2xl border border-border/50">
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    {service.description}
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {service.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gold mr-3"></div>
+                        <span className="text-muted-foreground">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
