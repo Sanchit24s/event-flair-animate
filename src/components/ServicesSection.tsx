@@ -1,25 +1,58 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Heart, Building2, PartyPopper, Camera, Utensils, Lightbulb } from 'lucide-react';
-import weddingEvent from '@/assets/wedding-event.jpg';
-import corporateEvent from '@/assets/corporate-event.jpg';
-import privateParty from '@/assets/private-party.jpg';
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Heart,
+  Building2,
+  PartyPopper,
+  Camera,
+  Utensils,
+  Lightbulb,
+} from "lucide-react";
+import weddingEvent from "@/assets/wedding-event.jpg";
+import corporateEvent from "@/assets/corporate-event.jpg";
+import privateParty from "@/assets/private-party.jpg";
 
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const serviceCardsRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const mobileServiceRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeService, setActiveService] = useState(0);
 
   useEffect(() => {
     const loadGSAP = async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      const { gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
 
       gsap.registerPlugin(ScrollTrigger);
 
+      // Animate mobile service cards
+      if (window.innerWidth < 1024 && mobileServiceRefs.current.length) {
+        mobileServiceRefs.current.forEach((card) => {
+          if (card) {
+            gsap.fromTo(
+              card,
+              { opacity: 0, y: 50 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top 85%",
+                  end: "bottom 10%",
+                  toggleActions: "play none none reverse",
+                },
+              }
+            );
+          }
+        });
+      }
+
       // Animate service cards on initial load
       if (serviceCardsRef.current?.children) {
-        gsap.fromTo(serviceCardsRef.current.children,
+        gsap.fromTo(
+          serviceCardsRef.current.children,
           { opacity: 0, x: -50, y: 30 },
           {
             opacity: 1,
@@ -32,8 +65,8 @@ const ServicesSection = () => {
               trigger: serviceCardsRef.current,
               start: "top 80%",
               end: "bottom 20%",
-              toggleActions: "play none none reverse"
-            }
+              toggleActions: "play none none reverse",
+            },
           }
         );
       }
@@ -64,11 +97,12 @@ const ServicesSection = () => {
           pin: imageRef.current,
           pinSpacing: true,
           scrub: true,
-          anticipatePin: 1
+          anticipatePin: 1,
         });
 
         // Animate image on scroll
-        gsap.fromTo(imageRef.current,
+        gsap.fromTo(
+          imageRef.current,
           { opacity: 0, scale: 0.9, y: 50 },
           {
             opacity: 1,
@@ -80,8 +114,8 @@ const ServicesSection = () => {
               trigger: imageRef.current,
               start: "top 80%", // Start animation when top of image hits 80% of viewport
               end: "top 20%", // End when image is near the top
-              toggleActions: "play none none reverse" // Play on enter, reverse on leave
-            }
+              toggleActions: "play none none reverse", // Play on enter, reverse on leave
+            },
           }
         );
 
@@ -94,16 +128,17 @@ const ServicesSection = () => {
             ease: "power2.inOut",
             onComplete: () => {
               setActiveService(index); // Update active service after fade out
-              gsap.fromTo(imageRef.current,
+              gsap.fromTo(
+                imageRef.current,
                 { opacity: 0, scale: 0.95 },
                 {
                   opacity: 1,
                   scale: 1,
                   duration: 0.5,
-                  ease: "power2.inOut"
+                  ease: "power2.inOut",
                 }
               );
-            }
+            },
           });
         }
       }
@@ -116,51 +151,87 @@ const ServicesSection = () => {
     {
       number: "01",
       title: "Wedding Planning",
-      description: "From intimate ceremonies to grand celebrations, we create wedding experiences that reflect your unique love story with impeccable attention to detail.",
+      description:
+        "From intimate ceremonies to grand celebrations, we create wedding experiences that reflect your unique love story with impeccable attention to detail.",
       image: weddingEvent,
       icon: Heart,
-      features: ["Venue Selection", "Decor & Design", "Vendor Coordination", "Day-of Management"]
+      features: [
+        "Venue Selection",
+        "Decor & Design",
+        "Vendor Coordination",
+        "Day-of Management",
+      ],
     },
     {
       number: "02",
       title: "Corporate Events",
-      description: "Professional gatherings that make lasting impressions. From conferences to product launches, we deliver events that align with your business objectives.",
+      description:
+        "Professional gatherings that make lasting impressions. From conferences to product launches, we deliver events that align with your business objectives.",
       image: corporateEvent,
       icon: Building2,
-      features: ["Conference Planning", "Team Building", "Product Launches", "Awards Ceremonies"]
+      features: [
+        "Conference Planning",
+        "Team Building",
+        "Product Launches",
+        "Awards Ceremonies",
+      ],
     },
     {
       number: "03",
       title: "Private Parties",
-      description: "Celebrate life's special moments with style. Birthday parties, anniversaries, and milestone celebrations crafted to create unforgettable memories.",
+      description:
+        "Celebrate life's special moments with style. Birthday parties, anniversaries, and milestone celebrations crafted to create unforgettable memories.",
       image: privateParty,
       icon: PartyPopper,
-      features: ["Birthday Celebrations", "Anniversary Parties", "Milestone Events", "Social Gatherings"]
+      features: [
+        "Birthday Celebrations",
+        "Anniversary Parties",
+        "Milestone Events",
+        "Social Gatherings",
+      ],
     },
     {
       number: "04",
       title: "Photography & Videography",
-      description: "Professional documentation of your special moments with cinematic quality and artistic vision.",
+      description:
+        "Professional documentation of your special moments with cinematic quality and artistic vision.",
       image: weddingEvent,
       icon: Camera,
-      features: ["Event Photography", "Videography", "Live Streaming", "Post-Production"]
+      features: [
+        "Event Photography",
+        "Videography",
+        "Live Streaming",
+        "Post-Production",
+      ],
     },
     {
       number: "05",
       title: "Catering Services",
-      description: "Exquisite culinary experiences tailored to your taste, featuring world-class chefs and premium ingredients.",
+      description:
+        "Exquisite culinary experiences tailored to your taste, featuring world-class chefs and premium ingredients.",
       image: corporateEvent,
       icon: Utensils,
-      features: ["Custom Menus", "Dietary Accommodations", "Service Staff", "Bar Services"]
+      features: [
+        "Custom Menus",
+        "Dietary Accommodations",
+        "Service Staff",
+        "Bar Services",
+      ],
     },
     {
       number: "06",
       title: "Lighting & Production",
-      description: "Atmospheric lighting and technical production services that transform your venue into an extraordinary space.",
+      description:
+        "Atmospheric lighting and technical production services that transform your venue into an extraordinary space.",
       image: privateParty,
       icon: Lightbulb,
-      features: ["Stage Lighting", "Audio Systems", "Visual Effects", "Technical Support"]
-    }
+      features: [
+        "Stage Lighting",
+        "Audio Systems",
+        "Visual Effects",
+        "Technical Support",
+      ],
+    },
   ];
 
   return (
@@ -173,37 +244,48 @@ const ServicesSection = () => {
             <span className="text-gold"> Services</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            We specialize in creating extraordinary experiences across a range of event types,
-            each crafted with meticulous attention to detail and personalized service.
+            We specialize in creating extraordinary experiences across a range
+            of event types, each crafted with meticulous attention to detail and
+            personalized service.
           </p>
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
+        <div className="hidden lg:grid lg:grid-cols-2 gap-16 items-start">
           {/* Left Column - Service Cards */}
           <div ref={serviceCardsRef} className="space-y-8">
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`group cursor-pointer transition-all duration-500 ${activeService === index ? 'scale-105' : 'hover:scale-102'
+                className={`group cursor-pointer transition-all duration-500 ${activeService === index ? "scale-105" : "hover:scale-102"
                   }`}
               >
                 <div className="flex items-start space-x-6 p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
                   {/* Service Number */}
-                  <div className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl transition-all duration-300 ${activeService === index
-                    ? 'bg-gold text-white shadow-lg shadow-gold/25'
-                    : 'bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold'
-                    }`}>
+                  <div
+                    className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl transition-all duration-300 ${activeService === index
+                        ? "bg-gold text-white shadow-lg shadow-gold/25"
+                        : "bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold"
+                      }`}
+                  >
                     {service.number}
                   </div>
 
                   {/* Service Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-3 mb-3">
-                      <service.icon className={`h-6 w-6 transition-colors duration-300 ${activeService === index ? 'text-gold' : 'text-muted-foreground group-hover:text-gold'
-                        }`} />
-                      <h3 className={`font-playfair text-2xl font-semibold transition-colors duration-300 ${activeService === index ? 'text-gold' : 'text-foreground group-hover:text-gold'
-                        }`}>
+                      <service.icon
+                        className={`h-6 w-6 transition-colors duration-300 ${activeService === index
+                            ? "text-gold"
+                            : "text-muted-foreground group-hover:text-gold"
+                          }`}
+                      />
+                      <h3
+                        className={`font-playfair text-2xl font-semibold transition-colors duration-300 ${activeService === index
+                            ? "text-gold"
+                            : "text-foreground group-hover:text-gold"
+                          }`}
+                      >
                         {service.title}
                       </h3>
                     </div>
@@ -216,9 +298,15 @@ const ServicesSection = () => {
                     <div className="grid grid-cols-2 gap-2">
                       {service.features.map((feature, idx) => (
                         <div key={idx} className="flex items-center text-sm">
-                          <div className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors duration-300 ${activeService === index ? 'bg-gold' : 'bg-muted-foreground group-hover:bg-gold'
-                            }`}></div>
-                          <span className="text-muted-foreground">{feature}</span>
+                          <div
+                            className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors duration-300 ${activeService === index
+                                ? "bg-gold"
+                                : "bg-muted-foreground group-hover:bg-gold"
+                              }`}
+                          ></div>
+                          <span className="text-muted-foreground">
+                            {feature}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -246,7 +334,7 @@ const ServicesSection = () => {
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
                     {React.createElement(services[activeService].icon, {
-                      className: "h-6 w-6 text-white"
+                      className: "h-6 w-6 text-white",
                     })}
                   </div>
                   <div className="text-white font-playfair text-3xl font-bold">
@@ -262,7 +350,11 @@ const ServicesSection = () => {
         <div className="lg:hidden mt-16">
           <div className="space-y-12">
             {services.map((service, index) => (
-              <div key={index} className="space-y-6">
+              <div
+                key={index}
+                className="space-y-6"
+                ref={(el) => (mobileServiceRefs.current[index] = el)}
+              >
                 <div className="relative h-64 rounded-2xl overflow-hidden">
                   <img
                     src={service.image}
@@ -274,7 +366,7 @@ const ServicesSection = () => {
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
                         {React.createElement(service.icon, {
-                          className: "h-5 w-5 text-white"
+                          className: "h-5 w-5 text-white",
                         })}
                       </div>
                       <div className="text-white font-playfair text-xl font-bold">
