@@ -5,6 +5,18 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { supabase } from '@/integrations/supabase/client';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix for default markers in react-leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 const ContactSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -62,16 +74,44 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const formData = new FormData(e.currentTarget);
+      
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert({
+          first_name: formData.get('firstName') as string,
+          last_name: formData.get('lastName') as string,
+          email: formData.get('email') as string,
+          phone: formData.get('phone') as string,
+          event_type: formData.get('eventType') as string,
+          message: formData.get('message') as string,
+        });
 
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for your inquiry. We'll get back to you within 24 hours.",
-    });
-
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to send message. Please try again.",
+          variant: "destructive",
+        });
+        console.error('Error submitting form:', error);
+      } else {
+        toast({
+          title: "Message Sent!",
+          description: "Thank you for your inquiry. We'll get back to you within 24 hours.",
+        });
+        (e.target as HTMLFormElement).reset();
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -131,6 +171,7 @@ const ContactSection = () => {
                       First Name *
                     </label>
                     <Input 
+                      name="firstName"
                       required
                       className="border-2 border-border focus:border-gold rounded-xl h-12"
                       placeholder="John"
@@ -141,6 +182,7 @@ const ContactSection = () => {
                       Last Name *
                     </label>
                     <Input 
+                      name="lastName"
                       required
                       className="border-2 border-border focus:border-gold rounded-xl h-12"
                       placeholder="Doe"
@@ -153,6 +195,7 @@ const ContactSection = () => {
                     Email Address *
                   </label>
                   <Input 
+                    name="email"
                     type="email"
                     required
                     className="border-2 border-border focus:border-gold rounded-xl h-12"
@@ -165,6 +208,7 @@ const ContactSection = () => {
                     Phone Number
                   </label>
                   <Input 
+                    name="phone"
                     type="tel"
                     className="border-2 border-border focus:border-gold rounded-xl h-12"
                     placeholder="+1 (555) 123-4567"
@@ -175,7 +219,7 @@ const ContactSection = () => {
                   <label className="block text-sm font-medium text-navy mb-2">
                     Event Type *
                   </label>
-                  <Select required>
+                  <Select name="eventType" required>
                     <SelectTrigger className="border-2 border-border focus:border-gold rounded-xl h-12">
                       <SelectValue placeholder="Select event type" />
                     </SelectTrigger>
@@ -193,6 +237,7 @@ const ContactSection = () => {
                     Tell us about your event *
                   </label>
                   <Textarea 
+                    name="message"
                     required
                     className="border-2 border-border focus:border-gold rounded-xl min-h-32 resize-none"
                     placeholder="Describe your vision, expected guest count, preferred date, and any special requirements..."
@@ -258,13 +303,28 @@ const ContactSection = () => {
               ))}
             </div>
 
-            {/* Map Placeholder */}
+            {/* Interactive Map */}
             <div className="h-64 bg-muted rounded-2xl overflow-hidden shadow-lg">
-              <img 
-                src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Office Location"
-                className="w-full h-full object-cover"
-              />
+              <MapContainer
+                center={[40.7128, -74.0060]} // New York coordinates
+                zoom={13}
+                scrollWheelZoom={false}
+                style={{ height: '100%', width: '100%' }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[40.7128, -74.0060]}>
+                  <Popup>
+                    <div className="text-center">
+                      <strong>Elegant Events</strong><br />
+                      123 Elegant Boulevard<br />
+                      Suite 456, New York, NY 10001
+                    </div>
+                  </Popup>
+                </Marker>
+              </MapContainer>
             </div>
           </div>
         </div>
