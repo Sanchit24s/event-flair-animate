@@ -17,7 +17,7 @@ const WhyChooseUsSection = () => {
         const heading = sectionRef.current.querySelector('.section-title');
         const subtitle = sectionRef.current.querySelector('.section-subtitle');
         const features = sectionRef.current.querySelectorAll('.feature-item');
-        
+
         // Create a timeline for smoother sequenced animations
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -29,10 +29,10 @@ const WhyChooseUsSection = () => {
         });
 
         // Animate image with smooth slide and scale
-        tl.fromTo(image, 
-          { 
-            opacity: 0, 
-            x: -60, 
+        tl.fromTo(image,
+          {
+            opacity: 0,
+            x: -60,
             scale: 0.95,
             rotationY: 5
           },
@@ -45,82 +45,75 @@ const WhyChooseUsSection = () => {
             ease: "power3.out",
           }
         )
-        
-        // Animate heading
-        .fromTo(heading,
-          { 
-            opacity: 0, 
-            y: 30,
-            scale: 0.98
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: "power2.out",
-          }, 
-          "-=0.6"
-        )
-        
-        // Animate subtitle
-        .fromTo(subtitle,
-          { 
-            opacity: 0, 
-            y: 20 
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power2.out",
-          }, 
-          "-=0.4"
-        )
-        
-        // Animate features with smooth stagger
-        .fromTo(features, 
-          { 
-            opacity: 0, 
-            y: 30,
-            x: 20,
-            scale: 0.95
-          },
-          {
-            opacity: 1,
-            y: 0,
-            x: 0,
-            scale: 1,
-            duration: 0.8,
-            stagger: {
-              amount: 0.4,
-              ease: "power2.out"
+
+          // Animate heading
+          .fromTo(heading,
+            {
+              opacity: 0,
+              y: 30,
+              scale: 0.98
             },
-            ease: "back.out(1.2)",
-          }, 
-          "-=0.3"
-        );
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "power2.out",
+            },
+            "-=0.6"
+          )
+
+          // Animate subtitle
+          .fromTo(subtitle,
+            {
+              opacity: 0,
+              y: 20
+            },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+            },
+            "-=0.4"
+          )
+
+          // Animate features with simple slide-in + fade-in
+          .fromTo(features,
+            {
+              opacity: 0,
+              y: 20,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              stagger: 0.2,
+              ease: "power2.out",
+            },
+            "-=0.3"
+          );
 
         // Add hover animations for features
         features.forEach((feature) => {
           const icon = feature.querySelector('.feature-icon');
           const text = feature.querySelector('.feature-text');
-          
+
           feature.addEventListener('mouseenter', () => {
             gsap.to(feature, {
               scale: 1.02,
               y: -2,
               duration: 0.3,
-              ease: "power2.out"
+              ease: "power2.out" // ✅ smooth
             });
             gsap.to(icon, {
-              scale: 1.1,
-              rotation: 5,
+              scale: 1.05, // slightly less
+              rotation: 0, // ✅ no tilt bounce
               duration: 0.3,
-              ease: "back.out(1.7)"
+              ease: "power2.out"
             });
           });
-          
+
           feature.addEventListener('mouseleave', () => {
             gsap.to(feature, {
               scale: 1,
@@ -144,14 +137,14 @@ const WhyChooseUsSection = () => {
 
   const features = [
     "Personalized planning",
-    "Creative & innovative concepts", 
+    "Creative & innovative concepts",
     "Reliable vendor network",
     "Transparent pricing",
     "End-to-end event solutions"
   ];
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="section-padding bg-background"
     >
@@ -160,9 +153,9 @@ const WhyChooseUsSection = () => {
           {/* Left Column - Image */}
           <div className="event-image">
             <div className="relative rounded-2xl overflow-hidden shadow-elegant">
-              <img 
-                src={elegantEventImage} 
-                alt="Elegant wedding celebration with beautiful decor and happy guests" 
+              <img
+                src={elegantEventImage}
+                alt="Elegant wedding celebration with beautiful decor and happy guests"
                 className="w-full h-[500px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-navy/20 to-transparent"></div>
