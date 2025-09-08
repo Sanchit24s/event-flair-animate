@@ -8,6 +8,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import bdayImage from "@/assets/birthday.jpg";
+import weddingImage from "@/assets/wedding.jpg";
+import gardenWeddingImage from "@/assets/garden-wedding.jpg";
+import anniversaryPartyImage from "@/assets/anniversary-party.jpg";
 
 const GallerySection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -17,7 +21,7 @@ const GallerySection = () => {
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+
       gsap.registerPlugin(ScrollTrigger);
 
       // Animate section header
@@ -70,7 +74,7 @@ const GallerySection = () => {
 
   const galleryImages = [
     {
-      src: "https://images.unsplash.com/photo-1519167758481-83f29c8bb5ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      src: weddingImage,
       title: "Elegant Wedding Reception",
       category: "Wedding"
     },
@@ -80,12 +84,12 @@ const GallerySection = () => {
       category: "Corporate"
     },
     {
-      src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      src: bdayImage,
       title: "Birthday Celebration",
       category: "Private Party"
     },
     {
-      src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      src: gardenWeddingImage,
       title: "Garden Wedding Ceremony",
       category: "Wedding"
     },
@@ -95,7 +99,7 @@ const GallerySection = () => {
       category: "Corporate"
     },
     {
-      src: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      src: anniversaryPartyImage,
       title: "Anniversary Party",
       category: "Private Party"
     }
@@ -113,7 +117,7 @@ const GallerySection = () => {
         {/* Header */}
         <div className="gallery-header text-center mb-12">
           <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-6">
-            Event 
+            Event
             <span className="text-gold"> Gallery</span>
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
@@ -136,12 +140,12 @@ const GallerySection = () => {
                 <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                   <div className="group cursor-pointer">
                     <div className="relative h-60 md:h-72 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:scale-[1.02]">
-                      <img 
+                      <img
                         src={image.src}
                         alt={image.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      
+
                       {/* Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
@@ -151,14 +155,7 @@ const GallerySection = () => {
                           <h3 className="font-playfair text-lg md:text-xl font-semibold mb-3">
                             {image.title}
                           </h3>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            className="text-white hover:text-gold p-0 h-auto group/btn"
-                          >
-                            View Details 
-                            <ExternalLink className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                          </Button>
+
                         </div>
                       </div>
 
@@ -178,7 +175,7 @@ const GallerySection = () => {
 
         {/* View All Button */}
         <div className="text-center mt-12">
-          <Button 
+          <Button
             variant="outline"
             size="lg"
             className="border-gold text-gold hover:bg-gold hover:text-white px-8 py-3 transition-all duration-300"

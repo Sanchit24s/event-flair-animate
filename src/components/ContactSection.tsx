@@ -1,21 +1,31 @@
-import { useEffect, useRef, useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { supabase } from '@/integrations/supabase/client';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import { useEffect, useRef, useState } from "react";
+import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { supabase } from "@/integrations/supabase/client";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import emailjs from "@emailjs/browser";
 
 // Fix for default markers in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
 const ContactSection = () => {
@@ -25,15 +35,21 @@ const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
+  // EmailJS configuration
+  const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
   useEffect(() => {
     const loadGSAP = async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+      const { gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+
       gsap.registerPlugin(ScrollTrigger);
 
       // Animate form from left
-      gsap.fromTo(formRef.current,
+      gsap.fromTo(
+        formRef.current,
         { opacity: 0, x: -80 },
         {
           opacity: 1,
@@ -44,13 +60,14 @@ const ContactSection = () => {
             trigger: sectionRef.current,
             start: "top 80%",
             end: "bottom 20%",
-            toggleActions: "play none none reverse"
-          }
+            toggleActions: "play none none reverse",
+          },
         }
       );
 
       // Animate info from right
-      gsap.fromTo(infoRef.current,
+      gsap.fromTo(
+        infoRef.current,
         { opacity: 0, x: 80 },
         {
           opacity: 1,
@@ -61,13 +78,17 @@ const ContactSection = () => {
             trigger: sectionRef.current,
             start: "top 80%",
             end: "bottom 20%",
-            toggleActions: "play none none reverse"
-          }
+            toggleActions: "play none none reverse",
+          },
         }
       );
     };
 
     loadGSAP();
+
+    if (EMAILJS_PUBLIC_KEY) {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -76,29 +97,34 @@ const ContactSection = () => {
 
     try {
       const formData = new FormData(e.currentTarget);
-      
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert({
-          first_name: formData.get('firstName') as string,
-          last_name: formData.get('lastName') as string,
-          email: formData.get('email') as string,
-          phone: formData.get('phone') as string,
-          event_type: formData.get('eventType') as string,
-          message: formData.get('message') as string,
-        });
+      const formPayload = {
+        first_name: formData.get("firstName") as string,
+        last_name: formData.get("lastName") as string,
+        email: formData.get("email") as string,
+        phone: formData.get("phone") as string,
+        event_type: formData.get("eventType") as string,
+        message: formData.get("message") as string,
+      };
 
+      // 1. Insert into Supabase
+      const { data, error } = await supabase
+        .from("contact_submissions")
+        .insert([formPayload])
+        .select();
+
+      await sendConfirmationEmail(formPayload);
       if (error) {
         toast({
           title: "Error",
           description: "Failed to send message. Please try again.",
           variant: "destructive",
         });
-        console.error('Error submitting form:', error);
+        console.error("Error submitting form:", error);
       } else {
         toast({
           title: "Message Sent!",
-          description: "Thank you for your inquiry. We'll get back to you within 24 hours.",
+          description:
+            "Thank you for your inquiry. We'll get back to you within 24 hours.",
         });
         (e.target as HTMLFormElement).reset();
       }
@@ -108,51 +134,78 @@ const ContactSection = () => {
         description: "Failed to send message. Please try again.",
         variant: "destructive",
       });
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // Function to send confirmation email
+  const sendConfirmationEmail = async (formData: any) => {
+    try {
+      // Template parameters that will be sent to EmailJS
+      const templateParams = {
+        name: formData.first_name,
+        email: formData.email,
+        phone: formData.phone,
+        event_type: formData.event_type,
+        message: formData.message,
+      };
+
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams
+      );
+
+      return { success: true, response };
+    } catch (error) {
+      return { success: false, error };
+    }
+  };
   const contactInfo = [
     {
       icon: Phone,
       title: "Phone",
-      details: ["+1 (555) 123-4567", "+1 (555) 123-4568"],
-      link: "tel:+15551234567"
+      details: ["+91 9869123601"],
+      link: "tel:+919869123601",
     },
     {
       icon: Mail,
       title: "Email",
-      details: ["info@elegantevents.com", "planning@elegantevents.com"],
-      link: "mailto:info@elegantevents.com"
+      details: ["namaheventsofficial@gmail.com"],
+      link: "mailto:namaheventsofficial@gmail.com",
     },
     {
       icon: MapPin,
       title: "Address",
       details: ["123 Elegant Boulevard", "Suite 456, New York, NY 10001"],
-      link: "https://maps.google.com"
+      link: "https://maps.google.com",
     },
     {
       icon: Clock,
       title: "Business Hours",
       details: ["Mon - Fri: 9:00 AM - 6:00 PM", "Sat: 10:00 AM - 4:00 PM"],
-      link: null
-    }
+      link: null,
+    },
   ];
 
   return (
-    <section id="contact" ref={sectionRef} className="section-padding bg-muted/30">
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="section-padding bg-muted/30"
+    >
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="font-playfair text-4xl lg:text-5xl font-bold text-navy mb-6">
-            Let's Start 
+            Let's Start
             <span className="text-gold"> Planning</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Ready to bring your vision to life? Contact us today for a free consultation 
-            and let's create something extraordinary together.
+            Ready to bring your vision to life? Contact us today for a free
+            consultation and let's create something extraordinary together.
           </p>
         </div>
 
@@ -163,14 +216,14 @@ const ContactSection = () => {
               <h3 className="font-playfair text-2xl font-bold text-navy mb-6">
                 Send us a message
               </h3>
-              
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-navy mb-2">
                       First Name *
                     </label>
-                    <Input 
+                    <Input
                       name="firstName"
                       required
                       className="border-2 border-border focus:border-gold rounded-xl h-12"
@@ -181,7 +234,7 @@ const ContactSection = () => {
                     <label className="block text-sm font-medium text-navy mb-2">
                       Last Name *
                     </label>
-                    <Input 
+                    <Input
                       name="lastName"
                       required
                       className="border-2 border-border focus:border-gold rounded-xl h-12"
@@ -194,7 +247,7 @@ const ContactSection = () => {
                   <label className="block text-sm font-medium text-navy mb-2">
                     Email Address *
                   </label>
-                  <Input 
+                  <Input
                     name="email"
                     type="email"
                     required
@@ -207,7 +260,7 @@ const ContactSection = () => {
                   <label className="block text-sm font-medium text-navy mb-2">
                     Phone Number
                   </label>
-                  <Input 
+                  <Input
                     name="phone"
                     type="tel"
                     className="border-2 border-border focus:border-gold rounded-xl h-12"
@@ -236,7 +289,7 @@ const ContactSection = () => {
                   <label className="block text-sm font-medium text-navy mb-2">
                     Tell us about your event *
                   </label>
-                  <Textarea 
+                  <Textarea
                     name="message"
                     required
                     className="border-2 border-border focus:border-gold rounded-xl min-h-32 resize-none"
@@ -244,7 +297,7 @@ const ContactSection = () => {
                   />
                 </div>
 
-                <Button 
+                <Button
                   type="submit"
                   disabled={isSubmitting}
                   className="w-full gold-gradient text-navy font-semibold h-12 text-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50"
@@ -269,8 +322,9 @@ const ContactSection = () => {
                 Get in touch
               </h3>
               <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-                We're here to help make your event dreams come true. Reach out to us through 
-                any of the following channels, and we'll respond promptly.
+                We're here to help make your event dreams come true. Reach out
+                to us through any of the following channels, and we'll respond
+                promptly.
               </p>
             </div>
 
@@ -281,15 +335,25 @@ const ContactSection = () => {
                     <item.icon size={20} />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-navy mb-1">{item.title}</h4>
+                    <h4 className="font-semibold text-navy mb-1">
+                      {item.title}
+                    </h4>
                     {item.details.map((detail, idx) => (
                       <p key={idx} className="text-muted-foreground">
                         {item.link && idx === 0 ? (
-                          <a 
+                          <a
                             href={item.link}
                             className="hover:text-gold transition-colors duration-300"
-                            target={item.link.startsWith('http') ? '_blank' : undefined}
-                            rel={item.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+                            target={
+                              item.link.startsWith("http")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              item.link.startsWith("http")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
                           >
                             {detail}
                           </a>
@@ -306,20 +370,22 @@ const ContactSection = () => {
             {/* Interactive Map */}
             <div className="h-64 bg-muted rounded-2xl overflow-hidden shadow-lg">
               <MapContainer
-                center={[40.7128, -74.0060]} // New York coordinates
+                center={[40.7128, -74.006]} // New York coordinates
                 zoom={13}
                 scrollWheelZoom={false}
-                style={{ height: '100%', width: '100%' }}
+                style={{ height: "100%", width: "100%" }}
               >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[40.7128, -74.0060]}>
+                <Marker position={[40.7128, -74.006]}>
                   <Popup>
                     <div className="text-center">
-                      <strong>Elegant Events</strong><br />
-                      123 Elegant Boulevard<br />
+                      <strong>Elegant Events</strong>
+                      <br />
+                      123 Elegant Boulevard
+                      <br />
                       Suite 456, New York, NY 10001
                     </div>
                   </Popup>

@@ -131,8 +131,8 @@ const HeroSection = () => {
                 textShadow: '0 4px 16px rgba(0,0,0,0.7), 0 2px 6px rgba(0,0,0,0.5)'
               }}
             >
-              Extraordinary Events
-              <span className="block text-gold-light mt-2">Crafted to Perfection</span>
+              Designing Experiences
+              <span className="block text-gold-light mt-2">That Last Forever</span>
             </h1>
 
             {/* Subheading */}
@@ -144,7 +144,7 @@ const HeroSection = () => {
                 filter: 'blur(0.2px)'
               }}
             >
-              Luxury weddings, corporate galas, and celebrations that exceed every expectation
+              From weddings to corporate galas, from intimate gatherings to luxury celebrations — we make every moment unforgettable
             </p>
 
             {/* CTA Buttons */}

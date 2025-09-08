@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import logo from "@/assets/logo.png";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -87,7 +88,8 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 flex items-center gap-1 cursor-pointer">
+            <img src={logo} alt="Namah Events Logo" className="w-9 h-9 object-contain" />
             <h1 className="font-playfair text-2xl lg:text-3xl font-bold">
               <span className="text-primary-foreground">Namah</span>
               <span className="text-gold"> Events</span>

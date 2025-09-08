@@ -91,15 +91,11 @@ const AboutSection = () => {
 
               <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
                 <p>
-                  For over 15 years, Elegant Events has been the trusted partner for those who
-                  demand excellence in event planning. We believe that every celebration deserves
-                  to be extraordinary.
+                  At NAMAH EVENTS, we believe every event tells a story – and we make sure yours is unforgettable. From intimate gatherings to grand celebrations, our team brings creativity, precision, and passion to every detail.
                 </p>
 
                 <p>
-                  Our team of experienced professionals brings creativity, attention to detail,
-                  and flawless execution to every project. From intimate gatherings to grand
-                  celebrations, we craft experiences that reflect your unique vision.
+                  With years of expertise in weddings, corporate events, social functions, and luxury celebrations, we are known for seamless planning, stunning décor, and flawless execution.
                 </p>
               </div>
 

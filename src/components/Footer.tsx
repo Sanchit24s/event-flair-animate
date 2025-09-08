@@ -1,5 +1,6 @@
 import { Heart, MapPin, Phone, Mail, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const scrollToSection = (sectionId: string) => {
@@ -19,12 +20,10 @@ const Footer = () => {
   ];
 
   const services = [
-    'Wedding Planning',
+    'Weddings & Engagements',
     'Corporate Events',
-    'Private Parties',
-    'Event Design',
-    'Venue Selection',
-    'Catering Services'
+    'Social Celebrations',
+    'Luxury Experiences',
   ];
 
   const socialLinks = [
@@ -48,12 +47,14 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {/* Company Info */}
             <div className="md:col-span-2 lg:col-span-1 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start mb-6">
+              <div className="flex items-center justify-center gap-1 md:justify-start mb-6">
                 <button
                   onClick={() => scrollToSection('hero')}
-                  className="text-xl md:text-2xl font-playfair font-bold text-white hover:text-gold transition-colors duration-300"
+                  className="flex items-center gap-1 text-xl md:text-2xl font-playfair font-bold text-white hover:text-gold transition-colors duration-300"
                 >
-                  Namah <span className="text-gold">Events</span>
+                  <img src={logo} alt="Namah Events Logo" className="w-8 h-8 object-contain" />
+                  <span className="text-primary-foreground">Namah</span>
+                  <span className="text-gold"> Events</span>
                 </button>
               </div>
 
@@ -127,20 +128,20 @@ const Footer = () => {
                 <div className="flex items-center justify-center md:justify-start">
                   <Phone className="w-5 h-5 text-gold mr-3" />
                   <a
-                    href="tel:+15551234567"
+                    href="tel:+919869123601"
                     className="text-white/80 hover:text-gold transition-colors duration-300 text-sm md:text-base"
                   >
-                    +1 (555) 123-4567
+                    +91 9869123601
                   </a>
                 </div>
 
                 <div className="flex items-center justify-center md:justify-start">
                   <Mail className="w-5 h-5 text-gold mr-3" />
                   <a
-                    href="mailto:info@elegantevents.com"
+                    href="mailto:namaheventsofficial@gmail.com"
                     className="text-white/80 hover:text-gold transition-colors duration-300 text-sm md:text-base"
                   >
-                    info@elegantevents.com
+                    namaheventsofficial@gmail.com
                   </a>
                 </div>
               </div>
@@ -171,7 +172,7 @@ const Footer = () => {
           <div className="container-custom py-6">
             <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
               <div className="flex items-center justify-center text-white/60 text-xs md:text-sm mb-4 md:mb-0">
-                <span>© 2024 Elegant Events. Made with</span>
+                <span>© 2025 Namah Events. Made with</span>
                 <Heart className="w-4 h-4 text-gold mx-1 fill-current" />
                 <span>for creating memorable experiences.</span>
               </div>

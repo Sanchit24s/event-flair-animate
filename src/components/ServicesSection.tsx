@@ -150,86 +150,58 @@ const ServicesSection = () => {
   const services = [
     {
       number: "01",
-      title: "Wedding Planning",
+      title: "Weddings & Engagements",
       description:
-        "From intimate ceremonies to grand celebrations, we create wedding experiences that reflect your unique love story with impeccable attention to detail.",
+        "From dreamy décor to curated ceremonies, we bring your love story to life with elegance and detail.",
       image: weddingEvent,
       icon: Heart,
       features: [
-        "Venue Selection",
-        "Decor & Design",
-        "Vendor Coordination",
-        "Day-of Management",
+        "Dreamy Décor",
+        "Curated Ceremonies",
+        "Entertainment",
+        "Logistics & On-Ground Execution",
       ],
     },
     {
       number: "02",
       title: "Corporate Events",
       description:
-        "Professional gatherings that make lasting impressions. From conferences to product launches, we deliver events that align with your business objectives.",
+        "Conferences, product launches, award nights, and team-building retreats designed to impress and inspire.",
       image: corporateEvent,
       icon: Building2,
       features: [
-        "Conference Planning",
-        "Team Building",
+        "Conferences",
         "Product Launches",
-        "Awards Ceremonies",
+        "Award Nights",
+        "Team-Building Retreats",
       ],
     },
     {
       number: "03",
-      title: "Private Parties",
+      title: "Social Celebrations",
       description:
-        "Celebrate life's special moments with style. Birthday parties, anniversaries, and milestone celebrations crafted to create unforgettable memories.",
+        "Birthdays, anniversaries, private parties, and family functions – we make every milestone unforgettable.",
       image: privateParty,
       icon: PartyPopper,
       features: [
-        "Birthday Celebrations",
-        "Anniversary Parties",
-        "Milestone Events",
-        "Social Gatherings",
+        "Birthdays",
+        "Anniversaries",
+        "Private Parties",
+        "Family Functions",
       ],
     },
     {
       number: "04",
-      title: "Photography & Videography",
+      title: "Luxury Experiences",
       description:
-        "Professional documentation of your special moments with cinematic quality and artistic vision.",
+        "Destination weddings, celebrity events, and VIP gatherings with flawless execution and luxury at every step.",
       image: weddingEvent,
-      icon: Camera,
-      features: [
-        "Event Photography",
-        "Videography",
-        "Live Streaming",
-        "Post-Production",
-      ],
-    },
-    {
-      number: "05",
-      title: "Catering Services",
-      description:
-        "Exquisite culinary experiences tailored to your taste, featuring world-class chefs and premium ingredients.",
-      image: corporateEvent,
-      icon: Utensils,
-      features: [
-        "Custom Menus",
-        "Dietary Accommodations",
-        "Service Staff",
-        "Bar Services",
-      ],
-    },
-    {
-      number: "06",
-      title: "Lighting & Production",
-      description:
-        "Atmospheric lighting and technical production services that transform your venue into an extraordinary space.",
-      image: privateParty,
       icon: Lightbulb,
       features: [
-        "Stage Lighting",
-        "Audio Systems",
-        "Visual Effects",
-        "Technical Support",
+        "Destination Weddings",
+        "Celebrity Events",
+        "VIP Gatherings",
+        "Full-Service Execution",
       ],
     },
   ];
@@ -264,8 +236,8 @@ const ServicesSection = () => {
                   {/* Service Number */}
                   <div
                     className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl transition-all duration-300 ${activeService === index
-                        ? "bg-gold text-white shadow-lg shadow-gold/25"
-                        : "bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold"
+                      ? "bg-gold text-white shadow-lg shadow-gold/25"
+                      : "bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold"
                       }`}
                   >
                     {service.number}
@@ -276,14 +248,14 @@ const ServicesSection = () => {
                     <div className="flex items-center space-x-3 mb-3">
                       <service.icon
                         className={`h-6 w-6 transition-colors duration-300 ${activeService === index
-                            ? "text-gold"
-                            : "text-muted-foreground group-hover:text-gold"
+                          ? "text-gold"
+                          : "text-muted-foreground group-hover:text-gold"
                           }`}
                       />
                       <h3
                         className={`font-playfair text-2xl font-semibold transition-colors duration-300 ${activeService === index
-                            ? "text-gold"
-                            : "text-foreground group-hover:text-gold"
+                          ? "text-gold"
+                          : "text-foreground group-hover:text-gold"
                           }`}
                       >
                         {service.title}
@@ -300,8 +272,8 @@ const ServicesSection = () => {
                         <div key={idx} className="flex items-center text-sm">
                           <div
                             className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors duration-300 ${activeService === index
-                                ? "bg-gold"
-                                : "bg-muted-foreground group-hover:bg-gold"
+                              ? "bg-gold"
+                              : "bg-muted-foreground group-hover:bg-gold"
                               }`}
                           ></div>
                           <span className="text-muted-foreground">
