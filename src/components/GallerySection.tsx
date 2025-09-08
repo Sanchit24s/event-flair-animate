@@ -12,10 +12,13 @@ import bdayImage from "@/assets/birthday.jpg";
 import weddingImage from "@/assets/wedding.jpg";
 import gardenWeddingImage from "@/assets/garden-wedding.jpg";
 import anniversaryPartyImage from "@/assets/anniversary-party.jpg";
+import haldiImage from "@/assets/haldi.jpg";
+import receptionImage from "@/assets/reception.jpg";
 
 const GallerySection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<any>(null);
+  const carouselApi = useRef<any>(null);
 
   useEffect(() => {
     const loadGSAP = async () => {
@@ -79,9 +82,9 @@ const GallerySection = () => {
       category: "Wedding"
     },
     {
-      src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      title: "Corporate Gala Evening",
-      category: "Corporate"
+      src: receptionImage,
+      title: "Grand Floral Stage",
+      category: "Reception"
     },
     {
       src: bdayImage,
@@ -94,9 +97,9 @@ const GallerySection = () => {
       category: "Wedding"
     },
     {
-      src: "https://images.unsplash.com/photo-1505236858219-8359eb29e329?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      title: "Product Launch Event",
-      category: "Corporate"
+      src: haldiImage,
+      title: "Traditional Haldi Ceremony",
+      category: "Pre-Wedding"
     },
     {
       src: anniversaryPartyImage,
@@ -106,9 +109,18 @@ const GallerySection = () => {
   ];
 
   const setApi = useCallback((api: any) => {
-    if (galleryRef.current) {
-      galleryRef.current.api = api;
-    }
+    carouselApi.current = api;
+  }, []);
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (carouselApi.current) {
+        carouselApi.current.scrollNext(); // ✅ embla API method
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
