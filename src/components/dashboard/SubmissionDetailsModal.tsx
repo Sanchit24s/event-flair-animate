@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { X, User, Mail, Phone, Calendar, MessageSquare, Tag } from "lucide-react";
+import { X, User, Mail, Phone, Calendar, MessageSquare, Tag, MessageCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -9,17 +9,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-
-type ContactSubmission = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string | null;
-  event_type: string;
-  message: string;
-  created_at: string;
-};
+import { ContactSubmission, updateContactStatus } from "@/services/contactService";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 type SubmissionDetailsModalProps = {
   submission: ContactSubmission | null;
@@ -29,7 +21,7 @@ type SubmissionDetailsModalProps = {
 
 const eventTypeColors = {
   wedding: "bg-rose-100 text-rose-800",
-  corporate: "bg-blue-100 text-blue-800", 
+  corporate: "bg-blue-100 text-blue-800",
   private: "bg-purple-100 text-purple-800",
   other: "bg-gray-100 text-gray-800",
 };
@@ -41,14 +33,33 @@ export const SubmissionDetailsModal = ({
 }: SubmissionDetailsModalProps) => {
   if (!submission) return null;
 
-  const handleEmailClick = () => {
-    window.open(`mailto:${submission.email}`, '_blank');
-  };
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  const handlePhoneClick = () => {
-    if (submission.phone) {
-      window.open(`tel:${submission.phone}`, '_blank');
+  const nextStatus: "pending" | "contacted" = submission.status === "contacted" ? "pending" : "contacted";
+
+  const { mutate: mutateStatus, isPending } = useMutation({
+    mutationFn: async () => {
+      if (!submission._id) throw new Error("Missing submission id");
+      return updateContactStatus(submission._id, nextStatus);
+    },
+    onSuccess: () => {
+      toast({ title: "Status updated", description: `Marked as ${nextStatus}.` });
+      queryClient.invalidateQueries({ queryKey: ["contact-submissions"] });
+      onClose();
+    },
+    onError: (err: any) => {
+      toast({ title: "Failed to update", description: err?.message ?? "Please try again.", variant: "destructive" });
     }
+  });
+
+  const handleWhatsAppClick = () => {
+    if (!submission.phone) return;
+    const digits = (submission.phone || "").replace(/\D/g, "");
+    if (!digits) return;
+    const message = `Hi ${submission.first_name}, this is Namah Events. We received your inquiry about a ${submission.event_type}.`;
+    const url = `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
   };
 
   return (
@@ -91,7 +102,6 @@ export const SubmissionDetailsModal = ({
                   <Button
                     variant="link"
                     className="p-0 h-auto font-semibold text-navy hover:text-gold"
-                    onClick={handleEmailClick}
                   >
                     {submission.email}
                   </Button>
@@ -108,7 +118,6 @@ export const SubmissionDetailsModal = ({
                     <Button
                       variant="link"
                       className="p-0 h-auto font-semibold text-navy hover:text-gold"
-                      onClick={handlePhoneClick}
                     >
                       {submission.phone}
                     </Button>
@@ -125,10 +134,22 @@ export const SubmissionDetailsModal = ({
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Event Type</p>
-                  <Badge 
+                  <Badge
                     className={`${eventTypeColors[submission.event_type as keyof typeof eventTypeColors] || eventTypeColors.other} capitalize mt-1`}
                   >
                     {submission.event_type}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+                  <Tag className="h-5 w-5 text-gold" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Status</p>
+                  <Badge className={`${submission.status === "contacted" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100" : "bg-amber-100 text-amber-800 hover:bg-amber-100"} capitalize mt-1 transition-colors`}>
+                    {submission.status ?? "pending"}
                   </Badge>
                 </div>
               </div>
@@ -140,10 +161,7 @@ export const SubmissionDetailsModal = ({
                 <div>
                   <p className="text-sm text-muted-foreground">Submitted On</p>
                   <p className="font-semibold text-navy">
-                    {format(new Date(submission.created_at), "MMMM dd, yyyy")}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    at {format(new Date(submission.created_at), "h:mm a")}
+                    {format(new Date(submission.createdAt), "MMMM dd, yyyy")}
                   </p>
                 </div>
               </div>
@@ -173,11 +191,20 @@ export const SubmissionDetailsModal = ({
               Close
             </Button>
             <Button
-              onClick={handleEmailClick}
-              className="gold-gradient text-navy font-semibold hover:scale-105 transition-all duration-300"
+              variant="outline"
+              disabled={isPending}
+              onClick={() => mutateStatus()}
+              className="border-2 border-gold text-gold hover:bg-gold hover:text-navy"
             >
-              <Mail className="mr-2 h-4 w-4" />
-              Reply via Email
+              {isPending ? "Updating..." : submission.status === "contacted" ? "Mark Pending" : "Mark Contacted"}
+            </Button>
+            <Button
+              onClick={handleWhatsAppClick}
+              className="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold hover:scale-105 transition-all duration-300"
+              disabled={!submission.phone}
+            >
+              <MessageCircle className="mr-2 h-4 w-4" />
+              WhatsApp
             </Button>
           </div>
         </motion.div>

@@ -3,7 +3,7 @@ import { Eye, Phone, Mail } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -22,17 +22,7 @@ import {
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
-
-type ContactSubmission = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string | null;
-  event_type: string;
-  message: string;
-  created_at: string;
-};
+import { ContactSubmission } from "@/services/contactService";
 
 type ContactSubmissionsTableProps = {
   submissions: ContactSubmission[];
@@ -46,7 +36,7 @@ type ContactSubmissionsTableProps = {
 
 const eventTypeColors = {
   wedding: "bg-rose-100 text-rose-800",
-  corporate: "bg-blue-100 text-blue-800", 
+  corporate: "bg-blue-100 text-blue-800",
   private: "bg-purple-100 text-purple-800",
   other: "bg-gray-100 text-gray-800",
 };
@@ -55,6 +45,18 @@ const truncateText = (text: string, maxLength: number = 50) => {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + "...";
 };
+
+const formatSubmissionDate = (dateString?: string) => {
+  if (!dateString) return "N/A"; // handle undefined/null
+
+  const date = new Date(dateString);
+
+  if (isNaN(date.getTime())) return "Invalid Date"; // handle invalid date strings
+
+  // Format as "10/09/2025"
+  return format(date, "dd/MM/yyyy");
+};
+
 
 export const ContactSubmissionsTable = ({
   submissions,
@@ -65,16 +67,16 @@ export const ContactSubmissionsTable = ({
   pageSize,
   onPageChange,
 }: ContactSubmissionsTableProps) => {
-  
+
   const renderPaginationItems = () => {
     const items = [];
     const maxVisible = 5;
-    
+
     // Always show first page
     if (currentPage > 3) {
       items.push(
         <PaginationItem key={1}>
-          <PaginationLink 
+          <PaginationLink
             onClick={() => onPageChange(1)}
             className="cursor-pointer hover:bg-gold/10"
           >
@@ -82,7 +84,7 @@ export const ContactSubmissionsTable = ({
           </PaginationLink>
         </PaginationItem>
       );
-      
+
       if (currentPage > 4) {
         items.push(
           <PaginationItem key="ellipsis1">
@@ -91,11 +93,11 @@ export const ContactSubmissionsTable = ({
         );
       }
     }
-    
+
     // Show pages around current page
     const startPage = Math.max(1, currentPage - 1);
     const endPage = Math.min(totalPages, currentPage + 1);
-    
+
     for (let i = startPage; i <= endPage; i++) {
       items.push(
         <PaginationItem key={i}>
@@ -109,7 +111,7 @@ export const ContactSubmissionsTable = ({
         </PaginationItem>
       );
     }
-    
+
     // Always show last page
     if (currentPage < totalPages - 2) {
       if (currentPage < totalPages - 3) {
@@ -119,7 +121,7 @@ export const ContactSubmissionsTable = ({
           </PaginationItem>
         );
       }
-      
+
       items.push(
         <PaginationItem key={totalPages}>
           <PaginationLink
@@ -131,7 +133,7 @@ export const ContactSubmissionsTable = ({
         </PaginationItem>
       );
     }
-    
+
     return items;
   };
 
@@ -186,7 +188,7 @@ export const ContactSubmissionsTable = ({
                   <TableHead className="font-semibold text-navy">Email</TableHead>
                   <TableHead className="font-semibold text-navy">Phone</TableHead>
                   <TableHead className="font-semibold text-navy">Event Type</TableHead>
-                  <TableHead className="font-semibold text-navy">Message</TableHead>
+                  <TableHead className="font-semibold text-navy">Status</TableHead>
                   <TableHead className="font-semibold text-navy">Date</TableHead>
                   <TableHead className="font-semibold text-navy">Actions</TableHead>
                 </TableRow>
@@ -194,7 +196,7 @@ export const ContactSubmissionsTable = ({
               <TableBody>
                 {submissions.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-12">
+                    <TableCell colSpan={8} className="text-center py-12">
                       <div className="text-muted-foreground">
                         <Mail className="mx-auto h-12 w-12 mb-4 opacity-50" />
                         <p className="text-lg font-medium">No submissions found</p>
@@ -205,7 +207,7 @@ export const ContactSubmissionsTable = ({
                 ) : (
                   submissions.map((submission, index) => (
                     <motion.tr
-                      key={submission.id}
+                      key={submission._id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -229,24 +231,20 @@ export const ContactSubmissionsTable = ({
                         )}
                       </TableCell>
                       <TableCell>
-                        <Badge 
-                          variant="secondary" 
+                        <Badge
+                          variant="secondary"
                           className={`${eventTypeColors[submission.event_type as keyof typeof eventTypeColors] || eventTypeColors.other} capitalize`}
                         >
                           {submission.event_type}
                         </Badge>
                       </TableCell>
-                      <TableCell className="max-w-xs">
-                        <span className="text-muted-foreground">
-                          {truncateText(submission.message)}
-                        </span>
+                      <TableCell>
+                        <Badge className={`${submission.status === "contacted" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100" : "bg-amber-100 text-amber-800 hover:bg-amber-100"} capitalize transition-colors`}>
+                          {submission.status ?? "pending"}
+                        </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {format(new Date(submission.created_at), "MMM dd, yyyy")}
-                        <br />
-                        <span className="text-xs opacity-70">
-                          {format(new Date(submission.created_at), "h:mm a")}
-                        </span>
+                        {formatSubmissionDate(submission.createdAt)}
                       </TableCell>
                       <TableCell>
                         <Button
@@ -277,20 +275,18 @@ export const ContactSubmissionsTable = ({
                   <PaginationItem>
                     <PaginationPrevious
                       onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-                      className={`cursor-pointer hover:bg-gold/10 ${
-                        currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
+                      className={`cursor-pointer hover:bg-gold/10 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                     />
                   </PaginationItem>
-                  
+
                   {renderPaginationItems()}
-                  
+
                   <PaginationItem>
                     <PaginationNext
                       onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
-                      className={`cursor-pointer hover:bg-gold/10 ${
-                        currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
+                      className={`cursor-pointer hover:bg-gold/10 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                     />
                   </PaginationItem>
                 </PaginationContent>

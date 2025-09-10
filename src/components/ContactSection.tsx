@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import emailjs from "@emailjs/browser";
+import { createContactSubmission } from "@/services/contactService";
 
 // Fix for default markers in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -106,28 +107,19 @@ const ContactSection = () => {
         message: formData.get("message") as string,
       };
 
-      // 1. Insert into Supabase
-      const { data, error } = await supabase
-        .from("contact_submissions")
-        .insert([formPayload])
-        .select();
+      await createContactSubmission({
+        ...formPayload,
+        event_type: formPayload.event_type as "wedding" | "corporate" | "private" | "other",
+      });
 
       await sendConfirmationEmail(formPayload);
-      if (error) {
-        toast({
-          title: "Error",
-          description: "Failed to send message. Please try again.",
-          variant: "destructive",
-        });
-        console.error("Error submitting form:", error);
-      } else {
-        toast({
-          title: "Message Sent!",
-          description:
-            "Thank you for your inquiry. We'll get back to you within 24 hours.",
-        });
-        (e.target as HTMLFormElement).reset();
-      }
+      toast({
+        title: "Message Sent!",
+        description:
+          "Thank you for your inquiry. We'll get back to you within 24 hours.",
+      });
+
+      (e.target as HTMLFormElement).reset();
     } catch (error) {
       toast({
         title: "Error",
