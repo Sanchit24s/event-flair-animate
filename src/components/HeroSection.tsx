@@ -1,8 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Calendar, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import heroBackground from '@/assets/hero-background.webp';
-// Using uploaded luxury venue image
+
+import casinoImage from '@/assets/casino-hero.jpg';
+import weddingImage from '@/assets/wedding-hero.jpg';
+import corporateImage from '@/assets/corporate-hero.webp';
+import eventImage from '@/assets/event-hero.webp';
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -11,6 +14,28 @@ const HeroSection = () => {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
+  // ✅ Smooth image rotation state
+  const images = [weddingImage, corporateImage, casinoImage, eventImage];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Preload images to prevent loading delays
+  useEffect(() => {
+    images.forEach((image) => {
+      const img = new Image();
+      img.src = image;
+    });
+  }, [images]);
+
+  // Image rotation logic
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  // GSAP animations
   useEffect(() => {
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
@@ -18,82 +43,45 @@ const HeroSection = () => {
 
       gsap.registerPlugin(ScrollTrigger);
 
-      // Hero entrance animation timeline
       const tl = gsap.timeline({ delay: 0.8 });
 
-      // Animate headline with split effect
-      tl.fromTo(headlineRef.current,
+      tl.fromTo(
+        headlineRef.current,
         { opacity: 0, y: 100, scale: 0.8 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1.4,
-          ease: "power3.out",
-        }
+        { opacity: 1, y: 0, scale: 1, duration: 1.4, ease: 'power3.out' }
       )
-        // Animate subheading
-        .fromTo(sublineRef.current,
+        .fromTo(
+          sublineRef.current,
           { opacity: 0, y: 60 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power3.out"
-          },
-          "-=0.8"
+          { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
+          '-=0.8'
         )
-        // Animate buttons with stagger
-        .fromTo(buttonsRef.current?.children || [],
+        .fromTo(
+          buttonsRef.current?.children || [],
           { opacity: 0, y: 40, scale: 0.8 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "back.out(1.4)"
-          },
-          "-=0.6"
+          { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.2, ease: 'back.out(1.4)' },
+          '-=0.6'
         )
-        // Animate scroll indicator
-        .fromTo(scrollIndicatorRef.current,
+        .fromTo(
+          scrollIndicatorRef.current,
           { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power2.out"
-          },
-          "-=0.4"
+          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+          '-=0.4'
         );
 
-      // Parallax effect for background
-      gsap.to(heroRef.current, {
-        yPercent: -30,
-        ease: "none",
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.5
-        }
-      });
-
-      // Scroll indicator fade out
       ScrollTrigger.create({
         trigger: heroRef.current,
-        start: "top top",
-        end: "bottom top",
+        start: 'top top',
+        end: 'bottom top',
         scrub: true,
         onUpdate: (self) => {
           if (scrollIndicatorRef.current) {
             gsap.to(scrollIndicatorRef.current, {
               opacity: 1 - self.progress,
-              duration: 0.3
+              duration: 0.3,
             });
           }
-        }
+        },
       });
     };
 
@@ -108,46 +96,51 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen w-full flex items-center overflow-hidden"
-      style={{
-        backgroundImage: `url(${heroBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}>
+    <section
+      id="hero"
+      ref={heroRef}
+      className="relative min-h-screen w-full flex items-center overflow-hidden"
+    >
+      {/* ✅ Smooth Rotating Background Images */}
+      {images.map((img, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out`}
+          style={{
+            backgroundImage: `url(${img})`,
+            opacity: index === currentImageIndex ? 1 : 0,
+            zIndex: index === currentImageIndex ? 1 : 0,
+          }}
+        />
+      ))}
 
-      {/* Left-side gradient overlay for contrast */}
-      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black via-black/80 to-transparent to-[60%]"></div>
+      {/* Overlay gradient for contrast */}
+      <div className="absolute inset-0 z-[2] bg-gradient-to-r from-black via-black/80 to-transparent to-[60%]"></div>
 
       {/* Hero Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <div className="text-center lg:text-left lg:max-w-3xl flex items-center min-h-[80vh]">
           <div className="w-full">
-            {/* Main Headline */}
             <h1
               ref={headlineRef}
               className="font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-3 leading-snug"
               style={{
-                textShadow: '0 4px 16px rgba(0,0,0,0.7), 0 2px 6px rgba(0,0,0,0.5)'
+                textShadow: '0 4px 16px rgba(0,0,0,0.7), 0 2px 6px rgba(0,0,0,0.5)',
               }}
             >
               Designing Experiences
               <span className="block text-gold-light mt-2">That Last Forever</span>
             </h1>
-
-            {/* Subheading */}
             <p
               ref={sublineRef}
               className="font-inter text-sm sm:text-base md:text-lg font-normal text-white/80 mb-8 max-w-lg leading-relaxed"
               style={{
                 textShadow: '0 3px 12px rgba(0,0,0,0.5)',
-                filter: 'blur(0.2px)'
+                filter: 'blur(0.2px)',
               }}
             >
               From weddings to corporate galas, from intimate gatherings to luxury celebrations — we make every moment unforgettable
             </p>
-
-            {/* CTA Buttons */}
             <div
               ref={buttonsRef}
               className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center"
@@ -160,7 +153,6 @@ const HeroSection = () => {
                 Get Started
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-
               <Button
                 onClick={() => scrollToSection('services')}
                 variant="outline"
@@ -170,7 +162,6 @@ const HeroSection = () => {
                 <Calendar className="mr-2 h-4 w-4" />
                 Explore Services
               </Button>
-
             </div>
           </div>
         </div>
@@ -179,7 +170,7 @@ const HeroSection = () => {
       {/* Scroll Indicator */}
       <div
         ref={scrollIndicatorRef}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/80 cursor-pointer group"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/80 cursor-pointer group z-10"
         onClick={() => scrollToSection('about')}
       >
         <div className="flex flex-col items-center animate-bounce">
