@@ -179,7 +179,7 @@ const ContactSection = () => {
     {
       icon: MapPin,
       title: "Address",
-      details: ["123 Elegant Boulevard", "Suite 456, New York, NY 10001"],
+      details: ["601, Crystal Heights", "Karter Road No 5, Borivali East, Mumbai 400066"],
       link: "https://maps.google.com",
     },
     {
@@ -370,8 +370,8 @@ const ContactSection = () => {
             {/* Interactive Map */}
             <div className="h-64 bg-muted rounded-2xl overflow-hidden shadow-lg">
               <MapContainer
-                center={[40.7128, -74.006]} // New York coordinates
-                zoom={13}
+                center={[19.2261, 72.8626]}  // Coordinates for Borivali East, Mumbai
+                zoom={16}
                 scrollWheelZoom={false}
                 style={{ height: "100%", width: "100%" }}
               >
@@ -379,14 +379,12 @@ const ContactSection = () => {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[40.7128, -74.006]}>
+                <Marker position={[19.2261, 72.8626]}>
                   <Popup>
                     <div className="text-center">
-                      <strong>Elegant Events</strong>
-                      <br />
-                      123 Elegant Boulevard
-                      <br />
-                      Suite 456, New York, NY 10001
+                      <strong>Crystal Heights (601)</strong><br />
+                      Carter Road No. 5, Borivali East<br />
+                      Mumbai 400066
                     </div>
                   </Popup>
                 </Marker>

@@ -120,8 +120,8 @@ const Footer = () => {
                 <div className="flex items-start justify-center md:justify-start">
                   <MapPin className="w-5 h-5 text-gold mt-1 mr-3 flex-shrink-0" />
                   <div className="text-white/80 text-sm md:text-base">
-                    <p>123 Elegant Boulevard</p>
-                    <p>Suite 456, New York, NY 10001</p>
+                    <p>601, Crystal Heights</p>
+                    <p>Karter Road No 5, Borivali East, Mumbai 400066</p>
                   </div>
                 </div>
 
