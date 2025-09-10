@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import logo from "@/assets/logo.png";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   const navLinks = [
     { id: 'hero', label: 'Home' },
@@ -117,6 +119,16 @@ const Navigation = () => {
                   />
                 </button>
               ))}
+              
+              {/* Dashboard Button */}
+              <Button
+                onClick={() => navigate('/dashboard')}
+                className="ml-4 gold-gradient text-navy font-semibold hover:scale-105 transition-all duration-300"
+                size="sm"
+              >
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Dashboard
+              </Button>
             </div>
           </div>
 
@@ -156,6 +168,18 @@ const Navigation = () => {
                 {label}
               </button>
             ))}
+            
+            {/* Mobile Dashboard Button */}
+            <Button
+              onClick={() => {
+                navigate('/dashboard');
+                setIsMenuOpen(false);
+              }}
+              className="w-full mt-4 gold-gradient text-navy font-semibold"
+            >
+              <BarChart3 className="mr-2 h-4 w-4" />
+              Dashboard
+            </Button>
           </div>
         </motion.div>
       )}
