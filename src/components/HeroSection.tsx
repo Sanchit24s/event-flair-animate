@@ -1,11 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Calendar, ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+"use client";
 
-import casinoImage from '@/assets/casino-hero.jpg';
-import weddingImage from '@/assets/wedding-hero.jpg';
-import corporateImage from '@/assets/corporate-hero.webp';
-import eventImage from '@/assets/event-hero.webp';
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Calendar, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+
+import casinoImage from "@/assets/casino-hero.jpg";
+import weddingImage from "@/assets/wedding-hero.jpg";
+import corporateImage from "@/assets/corporate-hero.webp";
+import eventImage from "@/assets/event-hero.webp";
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -14,32 +18,36 @@ const HeroSection = () => {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Smooth image rotation state
-  const images = [weddingImage, corporateImage, casinoImage, eventImage];
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = [
+    { src: weddingImage, alt: "Wedding Event" },
+    { src: corporateImage, alt: "Corporate Event" },
+    { src: casinoImage, alt: "Casino Event" },
+    { src: eventImage, alt: "Luxury Celebration" },
+  ];
+
+  const [activeImage, setActiveImage] = useState(0);
 
   // Preload images to prevent loading delays
   useEffect(() => {
     images.forEach((image) => {
       const img = new Image();
-      img.src = image;
+      img.src = image.src;
     });
   }, [images]);
 
-  // Image rotation logic
+  // Auto-cycle logic for both mobile and desktop
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 6000);
-
+      setActiveImage((prev) => (prev + 1) % images.length);
+    }, 5000); // 5s per image
     return () => clearInterval(interval);
   }, [images.length]);
 
   // GSAP animations
   useEffect(() => {
     const loadGSAP = async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      const { gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
 
       gsap.registerPlugin(ScrollTrigger);
 
@@ -48,31 +56,38 @@ const HeroSection = () => {
       tl.fromTo(
         headlineRef.current,
         { opacity: 0, y: 100, scale: 0.8 },
-        { opacity: 1, y: 0, scale: 1, duration: 1.4, ease: 'power3.out' }
+        { opacity: 1, y: 0, scale: 1, duration: 1.4, ease: "power3.out" }
       )
         .fromTo(
           sublineRef.current,
           { opacity: 0, y: 60 },
-          { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
-          '-=0.8'
+          { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
+          "-=0.8"
         )
         .fromTo(
           buttonsRef.current?.children || [],
           { opacity: 0, y: 40, scale: 0.8 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.2, ease: 'back.out(1.4)' },
-          '-=0.6'
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "back.out(1.4)",
+          },
+          "-=0.6"
         )
         .fromTo(
           scrollIndicatorRef.current,
           { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
-          '-=0.4'
+          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+          "-=0.4"
         );
 
       ScrollTrigger.create({
         trigger: heroRef.current,
-        start: 'top top',
-        end: 'bottom top',
+        start: "top top",
+        end: "bottom top",
         scrub: true,
         onUpdate: (self) => {
           if (scrollIndicatorRef.current) {
@@ -91,7 +106,7 @@ const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -101,21 +116,65 @@ const HeroSection = () => {
       ref={heroRef}
       className="relative min-h-screen w-full flex items-center overflow-hidden"
     >
-      {/* ✅ Smooth Rotating Background Images */}
-      {images.map((img, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out`}
-          style={{
-            backgroundImage: `url(${img})`,
-            opacity: index === currentImageIndex ? 1 : 0,
-            zIndex: index === currentImageIndex ? 1 : 0,
-          }}
-        />
-      ))}
+      {/* Mobile View: Smooth Rotating Background Images */}
+      <div className="lg:hidden absolute inset-0 w-full h-full z-0">
+        {images.map((img, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out`}
+            style={{
+              backgroundImage: `url(${img.src})`,
+              opacity: index === activeImage ? 1 : 0,
+              zIndex: index === activeImage ? 1 : 0,
+            }}
+          />
+        ))}
+      </div>
 
-      {/* Overlay gradient for contrast */}
-      <div className="absolute inset-0 z-[2] bg-gradient-to-r from-black via-black/80 to-transparent to-[60%]"></div>
+      {/* Desktop View: Auto-expanding Background Images */}
+      <div className="hidden lg:flex absolute inset-0 w-full h-full justify-center items-center gap-2 z-0" style={{ boxSizing: "border-box", flexShrink: 0 }}>
+        {images.map((image, index) => (
+          <motion.div
+            key={index}
+            className="relative overflow-hidden rounded-2xl will-change-[width,transform]"
+            initial={{ width: "5rem", height: "100%" }}
+            animate={{
+              width: activeImage === index ? "80%" : "calc(6rem - 0.25rem)",
+              height: "100%",
+            }}
+            transition={{
+              duration: 1.4,
+              ease: [0.645, 0.045, 0.355, 1],
+              type: "tween",
+            }}
+            style={{ backfaceVisibility: "hidden", transform: "translateZ(0)" }}
+          >
+            <img
+              src={image.src}
+              alt={image.alt}
+              className="w-full h-full object-cover object-center"
+              style={{ transformOrigin: "center" }}
+            />
+            <AnimatePresence>
+              {activeImage === index && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.4 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: 1.4,
+                    ease: [0.645, 0.045, 0.355, 1],
+                  }}
+                  className="absolute inset-0 bg-black"
+                />
+              )}
+            </AnimatePresence>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Overlay Gradient (Adjusted for responsiveness) */}
+      <div className="absolute inset-0 z-[2] bg-gradient-to-r from-black/80 via-black/60 to-transparent to-[60%] lg:from-black/60 lg:via-black/40 lg:to-transparent lg:to-[70%]" />
 
       {/* Hero Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
@@ -146,7 +205,7 @@ const HeroSection = () => {
               className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center"
             >
               <Button
-                onClick={() => scrollToSection('contact')}
+                onClick={() => scrollToSection("contact")}
                 size="sm"
                 className="gold-gradient text-navy font-medium px-6 py-3 text-sm tracking-wide transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-gold/40 border-0 uppercase"
               >
@@ -154,7 +213,7 @@ const HeroSection = () => {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button
-                onClick={() => scrollToSection('services')}
+                onClick={() => scrollToSection("services")}
                 variant="outline"
                 size="sm"
                 className="border border-white/70 text-white bg-white/5 backdrop-blur-sm hover:bg-white hover:text-navy px-6 py-3 text-sm font-medium tracking-wide transform transition-all duration-300 shadow hover:scale-105 hover:shadow-white/20 uppercase"
@@ -171,7 +230,7 @@ const HeroSection = () => {
       <div
         ref={scrollIndicatorRef}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/80 cursor-pointer group z-10"
-        onClick={() => scrollToSection('about')}
+        onClick={() => scrollToSection("about")}
       >
         <div className="flex flex-col items-center animate-bounce">
           <span className="font-inter text-sm mb-3 group-hover:text-gold transition-colors duration-300">
