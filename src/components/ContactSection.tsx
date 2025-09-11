@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { supabase } from "@/integrations/supabase/client";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import emailjs from "@emailjs/browser";
@@ -35,11 +34,6 @@ const ContactSection = () => {
   const infoRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-
-  // EmailJS configuration
-  const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-  const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-  const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
   useEffect(() => {
     const loadGSAP = async () => {
@@ -86,10 +80,6 @@ const ContactSection = () => {
     };
 
     loadGSAP();
-
-    if (EMAILJS_PUBLIC_KEY) {
-      emailjs.init(EMAILJS_PUBLIC_KEY);
-    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -112,7 +102,6 @@ const ContactSection = () => {
         event_type: formPayload.event_type as "wedding" | "corporate" | "private" | "other",
       });
 
-      await sendConfirmationEmail(formPayload);
       toast({
         title: "Message Sent!",
         description:
@@ -132,29 +121,6 @@ const ContactSection = () => {
     }
   };
 
-  // Function to send confirmation email
-  const sendConfirmationEmail = async (formData: any) => {
-    try {
-      // Template parameters that will be sent to EmailJS
-      const templateParams = {
-        name: formData.first_name,
-        email: formData.email,
-        phone: formData.phone,
-        event_type: formData.event_type,
-        message: formData.message,
-      };
-
-      const response = await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        templateParams
-      );
-
-      return { success: true, response };
-    } catch (error) {
-      return { success: false, error };
-    }
-  };
   const contactInfo = [
     {
       icon: Phone,
