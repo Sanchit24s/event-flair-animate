@@ -182,17 +182,6 @@ const Navigation = () => {
               Dashboard
             </Button>
 
-            {/* Mobile Login Button */}
-            <Button
-              onClick={() => {
-                navigate('/login');
-                setIsMenuOpen(false);
-              }}
-              variant="outline"
-              className="w-full mt-2 border-gold text-gold hover:bg-gold hover:text-navy font-semibold"
-            >
-              Login
-            </Button>
           </div>
         </motion.div>
       )}
