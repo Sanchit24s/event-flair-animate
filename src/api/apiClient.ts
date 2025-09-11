@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1",
@@ -10,7 +10,7 @@ const apiClient = axios.create({
 // Attach token
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("authToken");
         if (token && config.headers) {
             // Axios v1+ uses AxiosHeaders, which requires set() for dynamic assignment
             if (typeof config.headers.set === "function") {
@@ -30,7 +30,7 @@ apiClient.interceptors.response.use(
     (response: AxiosResponse) => response,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
-            localStorage.removeItem("token");
+            localStorage.removeItem("authToken");
             window.location.href = "/login";
         }
         return Promise.reject(error);

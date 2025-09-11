@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Download, RefreshCw } from "lucide-react";
+import { Download, LogOut, RefreshCw } from "lucide-react";
 import { CSVLink } from "react-csv";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 type DashboardHeaderProps = {
     onRefresh: () => void;
@@ -10,6 +12,17 @@ type DashboardHeaderProps = {
 };
 
 export const DashboardHeader = ({ onRefresh, csvData, csvFilename }: DashboardHeaderProps) => {
+    const navigate = useNavigate();
+    const { toast } = useToast();
+
+    const handleLogout = () => {
+        localStorage.removeItem("authToken");
+        toast({
+            title: "Logged Out",
+            description: "You have been successfully logged out.",
+        });
+        navigate("/login");
+    };
     return (
         <div className="bg-white border-b border-border">
             <div className="container-custom py-8">
@@ -38,6 +51,14 @@ export const DashboardHeader = ({ onRefresh, csvData, csvFilename }: DashboardHe
                                 Export CSV
                             </Button>
                         </CSVLink>
+                        <Button
+                            onClick={handleLogout}
+                            variant="outline"
+                            className="border-2 border-navy text-navy hover:bg-navy hover:text-white transition-all duration-300"
+                        >
+                            <LogOut className="mr-2 h-4 w-4" />
+                            Logout
+                        </Button>
                     </div>
                 </motion.div>
             </div>

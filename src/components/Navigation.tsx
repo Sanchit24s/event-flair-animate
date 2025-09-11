@@ -119,26 +119,17 @@ const Navigation = () => {
                   />
                 </button>
               ))}
-              
-               {/* Dashboard Button */}
-               <Button
-                 onClick={() => navigate('/dashboard')}
-                 className="ml-4 gold-gradient text-navy font-semibold hover:scale-105 transition-all duration-300"
-                 size="sm"
-               >
-                 <BarChart3 className="mr-2 h-4 w-4" />
-                 Dashboard
-               </Button>
 
-               {/* Login Button */}
-               <Button
-                 onClick={() => navigate('/login')}
-                 variant="outline"
-                 className="ml-2 border-gold text-gold hover:bg-gold hover:text-navy font-semibold hover:scale-105 transition-all duration-300"
-                 size="sm"
-               >
-                 Login
-               </Button>
+              {/* Dashboard Button */}
+              <Button
+                onClick={() => navigate('/dashboard')}
+                className="ml-4 gold-gradient text-navy font-semibold hover:scale-105 transition-all duration-300"
+                size="sm"
+              >
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Dashboard
+              </Button>
+
             </div>
           </div>
 
@@ -178,7 +169,7 @@ const Navigation = () => {
                 {label}
               </button>
             ))}
-            
+
             {/* Mobile Dashboard Button */}
             <Button
               onClick={() => {
