@@ -50,9 +50,9 @@ const AboutSection = () => {
   }, []);
 
   const stats = [
-    { icon: Heart, number: "500+", label: "Memorable Events" },
-    { icon: Users, number: "10K+", label: "Happy Clients" },
-    { icon: Award, number: "15+", label: "Years Experience" }
+    { icon: Heart, number: "50+", label: "Memorable Events" },
+    { icon: Users, number: "25+", label: "Happy Clients" },
+    { icon: Award, number: "5+", label: "Years Experience" }
   ];
 
   return (
@@ -71,7 +71,7 @@ const AboutSection = () => {
             </div>
             <div className="mt-4 text-left">
               <h4 className="font-semibold text-navy text-xl mb-1">Jimish R Shah</h4>
-              <p className="text-muted-foreground">Founder & Creative Director</p>
+              <p className="text-muted-foreground">Founder</p>
             </div>
           </div>
 
@@ -93,7 +93,7 @@ const AboutSection = () => {
             <blockquote className="italic text-xl text-navy font-playfair pl-6 border-l-4 border-gold my-6">
               "Excellence is not a skill, it's an attitude we bring to every event."
               <cite className="block text-base font-inter text-muted-foreground mt-3">
-                — Jimish R Shah, Founder & Creative Director
+                — Jimish R Shah, Founder
               </cite>
             </blockquote>
 
