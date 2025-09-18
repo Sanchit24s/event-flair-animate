@@ -125,8 +125,8 @@ const ContactSection = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+91 9869123601"],
-      link: "tel:+919869123601",
+      details: ["+91 95112 73300"],
+      link: "tel:+919511273300",
     },
     {
       icon: Mail,
