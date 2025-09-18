@@ -94,7 +94,7 @@ const GallerySection = () => {
     {
       src: gardenWeddingImage,
       title: "Garden Wedding Ceremony",
-      category: "Wedding"
+      category: "Pre-Wedding"
     },
     {
       src: haldiImage,

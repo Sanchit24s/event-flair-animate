@@ -6,17 +6,22 @@ import {
   Camera,
   Utensils,
   Lightbulb,
+  MessageCircle,
+  Star,
 } from "lucide-react";
 import weddingEvent from "@/assets/wedding-event.jpg";
 import corporateEvent from "@/assets/corporate-event.jpg";
 import privateParty from "@/assets/private-party.jpg";
+import ContactFormPopup from "./ContactFormPopUp";
 
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const serviceCardsRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const mobileServiceRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const floatingButtonsRef = useRef<HTMLDivElement>(null);
   const [activeService, setActiveService] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
     const loadGSAP = async () => {
@@ -79,22 +84,36 @@ const ServicesSection = () => {
         services.forEach((service, index) => {
           ScrollTrigger.create({
             trigger: service,
-            start: "top 60%", // Start when service enters viewport
+            start: "top 60%",
             end: "bottom 60%",
             onEnter: () => updateImage(index),
             onEnterBack: () => updateImage(index),
-            onLeave: () => { }, // Handle leaving if needed
-            onLeaveBack: () => { }, // Handle leaving back if needed
-            // markers: true
+            onLeave: () => { },
+            onLeaveBack: () => { },
           });
         });
 
         // Pin the image during service scroll
         ScrollTrigger.create({
           trigger: serviceCardsRef.current,
-          start: "top 20%", // Start pinning when services enter
-          end: () => `+=${serviceCardsRef.current.offsetHeight / 1.4}`, // End after all services
+          start: "top 20%",
+          end: () => `+=${serviceCardsRef.current.offsetHeight / 1.4}`,
           pin: imageRef.current,
+          pinSpacing: true,
+          scrub: true,
+          anticipatePin: 1,
+        });
+
+        // Pin floating buttons in desktop layout (same as image)
+        if (floatingButtonsRef.current) {
+
+        }
+
+        ScrollTrigger.create({
+          trigger: serviceCardsRef.current,
+          start: "top 20%",
+          end: () => `+=${serviceCardsRef.current.offsetHeight / 1.4}`,
+          pin: floatingButtonsRef.current,
           pinSpacing: true,
           scrub: true,
           anticipatePin: 1,
@@ -112,9 +131,9 @@ const ServicesSection = () => {
             ease: "power2.out",
             scrollTrigger: {
               trigger: imageRef.current,
-              start: "top 80%", // Start animation when top of image hits 80% of viewport
-              end: "top 20%", // End when image is near the top
-              toggleActions: "play none none reverse", // Play on enter, reverse on leave
+              start: "top 80%",
+              end: "top 20%",
+              toggleActions: "play none none reverse",
             },
           }
         );
@@ -127,7 +146,7 @@ const ServicesSection = () => {
             duration: 0.5,
             ease: "power2.inOut",
             onComplete: () => {
-              setActiveService(index); // Update active service after fade out
+              setActiveService(index);
               gsap.fromTo(
                 imageRef.current,
                 { opacity: 0, scale: 0.95 },
@@ -207,7 +226,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" ref={sectionRef} className="py-20 bg-background">
+    <section id="services" ref={sectionRef} className="relative py-20 bg-background">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-20">
@@ -225,71 +244,95 @@ const ServicesSection = () => {
         {/* Two Column Layout */}
         <div className="hidden lg:grid lg:grid-cols-2 gap-16 items-start">
           {/* Left Column - Service Cards */}
-          <div ref={serviceCardsRef} className="space-y-8">
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className={`group cursor-pointer transition-all duration-500 ${activeService === index ? "scale-105" : "hover:scale-102"
-                  }`}
-              >
-                <div className="flex items-start space-x-6 p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
-                  {/* Service Number */}
-                  <div
-                    className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl transition-all duration-300 ${activeService === index
-                      ? "bg-gold text-white shadow-lg shadow-gold/25"
-                      : "bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold"
-                      }`}
-                  >
-                    {service.number}
-                  </div>
-
-                  {/* Service Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <service.icon
-                        className={`h-6 w-6 transition-colors duration-300 ${activeService === index
-                          ? "text-gold"
-                          : "text-muted-foreground group-hover:text-gold"
-                          }`}
-                      />
-                      <h3
-                        className={`font-playfair text-2xl font-semibold transition-colors duration-300 ${activeService === index
-                          ? "text-gold"
-                          : "text-foreground group-hover:text-gold"
-                          }`}
-                      >
-                        {service.title}
-                      </h3>
+          <div>
+            <div ref={serviceCardsRef} className="space-y-8">
+              {services.map((service, index) => (
+                <div
+                  key={index}
+                  className={`group cursor-text transition-all duration-500 ${activeService === index ? "scale-105" : "hover:scale-102"}`}
+                >
+                  <div className="flex items-start space-x-6 p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
+                    {/* Service Number */}
+                    <div
+                      className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl transition-all duration-300 ${activeService === index
+                        ? "bg-gold text-white shadow-lg shadow-gold/25"
+                        : "bg-muted text-muted-foreground group-hover:bg-gold/20 group-hover:text-gold"
+                        }`}
+                    >
+                      {service.number}
                     </div>
 
-                    <p className="text-muted-foreground leading-relaxed mb-4">
-                      {service.description}
-                    </p>
+                    {/* Service Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <service.icon
+                          className={`h-6 w-6 transition-colors duration-300 ${activeService === index
+                            ? "text-gold"
+                            : "text-muted-foreground group-hover:text-gold"
+                            }`}
+                        />
+                        <h3
+                          className={`font-playfair text-2xl font-semibold transition-colors duration-300 ${activeService === index
+                            ? "text-gold"
+                            : "text-foreground group-hover:text-gold"
+                            }`}
+                        >
+                          {service.title}
+                        </h3>
+                      </div>
 
-                    {/* Features */}
-                    <div className="grid grid-cols-2 gap-2">
-                      {service.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center text-sm">
-                          <div
-                            className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors duration-300 ${activeService === index
-                              ? "bg-gold"
-                              : "bg-muted-foreground group-hover:bg-gold"
-                              }`}
-                          ></div>
-                          <span className="text-muted-foreground">
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
+                      <p className="text-muted-foreground leading-relaxed mb-4">
+                        {service.description}
+                      </p>
+
+                      {/* Features */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {service.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-center text-sm">
+                            <div
+                              className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors duration-300 ${activeService === index
+                                ? "bg-gold"
+                                : "bg-muted-foreground group-hover:bg-gold"
+                                }`}
+                            ></div>
+                            <span className="text-muted-foreground">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+
+            </div>
+
+            {/* Action Buttons below service cards */}
+            <div className="mt-12 flex justify-center gap-6">
+              <button
+                onClick={() => setIsPopupOpen(true)}
+                className="px-6 py-3 rounded-full bg-gold text-white font-semibold shadow-lg hover:bg-gold/90 transition-transform duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Contact Us
+              </button>
+              <a
+                href="https://g.page/your-google-review-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 rounded-full bg-navy text-white font-semibold shadow-lg hover:bg-navy/90 transition-transform duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2"
+              >
+                <Star className="w-5 h-5" />
+                Leave a Review
+              </a>
+            </div>
+            <ContactFormPopup
+              isOpen={isPopupOpen}
+              onClose={() => setIsPopupOpen(false)}
+            />
           </div>
 
-          {/* Right Column - Preview Image */}
-          <div className="lg:sticky lg:top-8">
+          {/* Right Column - Preview Image and Floating Buttons */}
+          <div className="lg:sticky lg:top-8 relative">
             <div
               ref={imageRef}
               className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl"
@@ -363,6 +406,26 @@ const ServicesSection = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Action Buttons for Mobile (below service cards) */}
+          <div className="mt-10 flex justify-center gap-4">
+            <a
+              href="mailto:info@youreventsite.com"
+              className="flex-1 px-4 py-3 rounded-full bg-gold text-white font-semibold shadow-lg hover:bg-gold/90 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
+            >
+              <MessageCircle className="w-5 h-5" />
+              Contact Us
+            </a>
+            <a
+              href="https://g.page/your-google-review-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 px-4 py-3 rounded-full bg-navy text-white font-semibold shadow-lg hover:bg-navy/90 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
+            >
+              <Star className="w-5 h-5" />
+              Review
+            </a>
           </div>
         </div>
       </div>

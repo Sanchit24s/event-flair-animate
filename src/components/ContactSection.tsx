@@ -137,8 +137,11 @@ const ContactSection = () => {
     {
       icon: MapPin,
       title: "Address",
-      details: ["601, Crystal Heights", "Karter Road No 5, Borivali East, Mumbai 400066"],
-      link: "https://maps.google.com",
+      details: [
+        "601, Crystal Heights",
+        "Carter Rd Number 5, Khande Rao Dongari, Borivali East, Mumbai, Maharashtra 400066",
+      ],
+      link: "https://www.google.com/maps/place/Crystal+Heights,+Carter+Rd+Number+5,+Khande+Rao+Dongari,+Borivali+East,+Mumbai,+Maharashtra+400066",
     },
     {
       icon: Clock,
@@ -185,7 +188,7 @@ const ContactSection = () => {
                       name="firstName"
                       required
                       className="border-2 border-border focus:border-gold rounded-xl h-12"
-                      placeholder="John"
+                      placeholder="Amit"
                     />
                   </div>
                   <div>
@@ -196,7 +199,7 @@ const ContactSection = () => {
                       name="lastName"
                       required
                       className="border-2 border-border focus:border-gold rounded-xl h-12"
-                      placeholder="Doe"
+                      placeholder="Sharma"
                     />
                   </div>
                 </div>
@@ -210,7 +213,7 @@ const ContactSection = () => {
                     type="email"
                     required
                     className="border-2 border-border focus:border-gold rounded-xl h-12"
-                    placeholder="john@example.com"
+                    placeholder="amit.sharma@example.com"
                   />
                 </div>
 
@@ -222,7 +225,7 @@ const ContactSection = () => {
                     name="phone"
                     type="tel"
                     className="border-2 border-border focus:border-gold rounded-xl h-12"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="98765 43210"
                   />
                 </div>
 
@@ -326,12 +329,21 @@ const ContactSection = () => {
             </div>
 
             {/* Interactive Map */}
-            <div className="h-64 bg-muted rounded-2xl overflow-hidden shadow-lg">
+            <div
+              className="h-64 bg-muted rounded-2xl overflow-hidden shadow-lg cursor-pointer"
+              onClick={() =>
+                window.open(
+                  "https://www.google.com/maps/place/Namah+Events/@19.2261619,72.8602555,17z/data=!3m1!4b1!4m6!3m5!1s0x3be7b19cc92b2021:0xcea859e3de149d3e!8m2!3d19.2261619!4d72.8628304!16s%2Fg%2F11yk6bh_c3?entry=ttu&g_ep=EgoyMDI1MDkxNi4wIKXMDSoASAFQAw%3D%3D",
+                  "_blank",
+                  "noopener,noreferrer"
+                )
+              }
+            >
               <MapContainer
-                center={[19.2261, 72.8626]}  // Coordinates for Borivali East, Mumbai
+                center={[19.2261, 72.8626]} // Coordinates for Borivali East, Mumbai
                 zoom={16}
                 scrollWheelZoom={false}
-                style={{ height: "100%", width: "100%" }}
+                style={{ height: "100%", width: "100%", pointerEvents: "none" }} // disable direct map interaction
               >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -340,8 +352,10 @@ const ContactSection = () => {
                 <Marker position={[19.2261, 72.8626]}>
                   <Popup>
                     <div className="text-center">
-                      <strong>Crystal Heights (601)</strong><br />
-                      Carter Road No. 5, Borivali East<br />
+                      <strong>Crystal Heights (601)</strong>
+                      <br />
+                      Carter Road No. 5, Borivali East
+                      <br />
                       Mumbai 400066
                     </div>
                   </Popup>

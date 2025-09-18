@@ -5,9 +5,10 @@ import { ArrowRight, Calendar, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import ContactFormPopup from "./ContactFormPopUp";
 
-import casinoImage from "@/assets/casino-hero.jpg";
-import weddingImage from "@/assets/wedding-hero.jpg";
+import casinoImage from "@/assets/casino-hero.webp";
+import weddingImage from "@/assets/wedding-hero.webp";
 import corporateImage from "@/assets/corporate-hero.webp";
 import eventImage from "@/assets/event-hero.webp";
 
@@ -17,6 +18,7 @@ const HeroSection = () => {
   const sublineRef = useRef<HTMLParagraphElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const images = [
     { src: weddingImage, alt: "Wedding Event" },
@@ -26,6 +28,7 @@ const HeroSection = () => {
   ];
 
   const [activeImage, setActiveImage] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Preload images to prevent loading delays
   useEffect(() => {
@@ -35,12 +38,47 @@ const HeroSection = () => {
     });
   }, [images]);
 
-  // Auto-cycle logic for both mobile and desktop
-  useEffect(() => {
-    const interval = setInterval(() => {
+  // Auto-cycle logic with restart functionality
+  const startAutoCycle = (startFrom: number = activeImage) => {
+    // Clear existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    // Start new interval from the specified image
+    intervalRef.current = setInterval(() => {
       setActiveImage((prev) => (prev + 1) % images.length);
     }, 5000); // 5s per image
-    return () => clearInterval(interval);
+  };
+
+  // Handle image click - Enhanced for better functionality
+  const handleImageClick = (index: number, event: React.MouseEvent) => {
+    // Prevent event bubbling
+    event.stopPropagation();
+
+    // Only allow clicks on desktop (when images are visible as strips)
+    if (window.innerWidth >= 1024 && index !== activeImage) {
+      console.log(`Clicking image ${index}`); // Debug log
+      setActiveImage(index);
+      // Clear current interval and start fresh from clicked image
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      // Set a small delay before starting new cycle to let animation complete
+      setTimeout(() => {
+        startAutoCycle(index);
+      }, 100);
+    }
+  };
+
+  // Initial auto-cycle setup
+  useEffect(() => {
+    startAutoCycle();
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, [images.length]);
 
   // GSAP animations
@@ -131,12 +169,15 @@ const HeroSection = () => {
         ))}
       </div>
 
-      {/* Desktop View: Auto-expanding Background Images */}
-      <div className="hidden lg:flex absolute inset-0 w-full h-full justify-center items-center gap-2 z-0" style={{ boxSizing: "border-box", flexShrink: 0 }}>
+      {/* Desktop View: Auto-expanding Background Images with Click Functionality */}
+      <div className="hidden lg:flex absolute inset-0 w-full h-full justify-center items-center gap-2 z-[1]" style={{ boxSizing: "border-box", flexShrink: 0 }}>
         {images.map((image, index) => (
           <motion.div
             key={index}
-            className="relative overflow-hidden rounded-2xl will-change-[width,transform]"
+            className={cn(
+              "relative overflow-hidden rounded-2xl will-change-[width,transform] group",
+              activeImage === index ? "cursor-default" : "cursor-pointer"
+            )}
             initial={{ width: "5rem", height: "100%" }}
             animate={{
               width: activeImage === index ? "80%" : "calc(6rem - 0.25rem)",
@@ -147,25 +188,42 @@ const HeroSection = () => {
               ease: [0.645, 0.045, 0.355, 1],
               type: "tween",
             }}
-            style={{ backfaceVisibility: "hidden", transform: "translateZ(0)" }}
+            style={{
+              backfaceVisibility: "hidden",
+              transform: "translateZ(0)",
+              cursor: activeImage === index ? "default" : "pointer",
+              zIndex: activeImage === index ? 1 : 5,
+              position: 'relative'
+            }}
+            onClick={(e) => handleImageClick(index, e)}
+            onMouseDown={(e) => e.stopPropagation()}
+            whileHover={{
+              scale: activeImage === index ? 1 : 1.02,
+            }}
+            whileTap={{
+              scale: activeImage === index ? 1 : 0.98
+            }}
           >
             <img
               src={image.src}
               alt={image.alt}
-              className="w-full h-full object-cover object-center"
-              style={{ transformOrigin: "center" }}
+              className="w-full h-full object-cover object-center transition-all duration-300"
+              style={{
+                transformOrigin: "center",
+                pointerEvents: "none"
+              }}
             />
             <AnimatePresence>
               {activeImage === index && (
                 <motion.div
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.4 }}
+                  animate={{ opacity: 0.2 }}
                   exit={{ opacity: 0 }}
                   transition={{
                     duration: 1.4,
                     ease: [0.645, 0.045, 0.355, 1],
                   }}
-                  className="absolute inset-0 bg-black"
+                  className="absolute inset-0 bg-black pointer-events-none"
                 />
               )}
             </AnimatePresence>
@@ -174,11 +232,11 @@ const HeroSection = () => {
       </div>
 
       {/* Overlay Gradient (Adjusted for responsiveness) */}
-      <div className="absolute inset-0 z-[2] bg-gradient-to-r from-black/80 via-black/60 to-transparent to-[60%] lg:from-black/60 lg:via-black/40 lg:to-transparent lg:to-[70%]" />
+      <div className="absolute inset-0 z-[2] bg-gradient-to-r from-black/80 via-black/60 to-transparent to-[60%] lg:from-black/60 lg:via-black/40 lg:to-transparent lg:to-[70%] pointer-events-none" />
 
       {/* Hero Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-        <div className="text-center lg:text-left lg:max-w-3xl flex items-center min-h-[80vh]">
+      <div className="relative z-10 w-full max-w-3xl ml-4 md:ml-24 lg:ml-32 px-4 sm:px-6 lg:px-8 pt-16">
+        <div className="text-center lg:text-left lg:max-w-xl flex items-center min-h-[50vh]">
           <div className="w-full">
             <h1
               ref={headlineRef}
@@ -205,7 +263,7 @@ const HeroSection = () => {
               className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center"
             >
               <Button
-                onClick={() => scrollToSection("contact")}
+                onClick={() => setIsPopupOpen(true)}
                 size="sm"
                 className="gold-gradient text-navy font-medium px-6 py-3 text-sm tracking-wide transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-gold/40 border-0 uppercase"
               >
@@ -242,6 +300,12 @@ const HeroSection = () => {
           <ChevronDown className="mt-2 h-5 w-5 text-white/60 group-hover:text-gold transition-colors duration-300" />
         </div>
       </div>
+
+      {/* Contact Form Popup */}
+      <ContactFormPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
     </section>
   );
 };

@@ -10,6 +10,7 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import CTASection from '@/components/CTASection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
+import TrustIndicators from '@/components/TrustIndicators';
 
 const Index = () => {
   useEffect(() => {
@@ -61,7 +62,8 @@ const Index = () => {
         <GallerySection />
         <ProcessSection />
         <WhyChooseUsSection />
-        <TestimonialsSection />
+        {/* <TestimonialsSection /> */}
+        <TrustIndicators />
         <CTASection />
         <ContactSection />
       </main>

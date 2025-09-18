@@ -10,7 +10,7 @@ const TestimonialsSection = () => {
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+
       gsap.registerPlugin(ScrollTrigger);
 
       gsap.fromTo(sectionRef.current,
@@ -83,8 +83,8 @@ const TestimonialsSection = () => {
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
-      <Star 
-        key={i} 
+      <Star
+        key={i}
         className={`w-5 h-5 ${i < rating ? 'text-gold fill-current' : 'text-gray-300'}`}
       />
     ));
@@ -96,7 +96,7 @@ const TestimonialsSection = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="font-playfair text-4xl lg:text-5xl font-bold text-navy mb-6">
-            What Our Clients 
+            What Our Clients
             <span className="text-gold"> Say</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -107,7 +107,7 @@ const TestimonialsSection = () => {
         {/* Testimonial Carousel */}
         <div className="relative max-w-4xl mx-auto">
           <div className="overflow-hidden rounded-3xl bg-white shadow-2xl">
-            <div 
+            <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
@@ -131,7 +131,7 @@ const TestimonialsSection = () => {
 
                     {/* Client Info */}
                     <div className="flex items-center justify-center">
-                      <img 
+                      <img
                         src={testimonial.image}
                         alt={testimonial.name}
                         className="w-16 h-16 rounded-full object-cover border-4 border-gold/20 mr-4"
@@ -160,7 +160,7 @@ const TestimonialsSection = () => {
           >
             <ChevronLeft className="w-5 h-5" />
           </Button>
-          
+
           <Button
             variant="outline"
             size="sm"
@@ -176,11 +176,10 @@ const TestimonialsSection = () => {
               <button
                 key={index}
                 onClick={() => goToTestimonial(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentIndex 
-                    ? 'bg-gold scale-125' 
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex
+                    ? 'bg-gold scale-125'
                     : 'bg-gray-300 hover:bg-gold/50'
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -189,7 +188,7 @@ const TestimonialsSection = () => {
         {/* Trust Indicators */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 pt-16 border-t border-border">
           <div className="text-center">
-            <div className="text-3xl font-playfair font-bold text-navy mb-2">500+</div>
+            <div className="text-3xl font-playfair font-bold text-navy mb-2">50+</div>
             <div className="text-sm text-muted-foreground uppercase tracking-wide">Events Planned</div>
           </div>
           <div className="text-center">
@@ -197,7 +196,7 @@ const TestimonialsSection = () => {
             <div className="text-sm text-muted-foreground uppercase tracking-wide">Client Satisfaction</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-playfair font-bold text-navy mb-2">15+</div>
+            <div className="text-3xl font-playfair font-bold text-navy mb-2">5+</div>
             <div className="text-sm text-muted-foreground uppercase tracking-wide">Years Experience</div>
           </div>
           <div className="text-center">
