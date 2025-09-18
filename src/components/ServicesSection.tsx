@@ -316,7 +316,7 @@ const ServicesSection = () => {
                 Contact Us
               </button>
               <a
-                href="https://g.page/your-google-review-link"
+                href="https://g.page/r/CT6dFN7jWajOEBM/review"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 rounded-full bg-navy text-white font-semibold shadow-lg hover:bg-navy/90 transition-transform duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2"
