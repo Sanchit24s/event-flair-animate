@@ -1,4 +1,4 @@
-import { Heart, MapPin, Phone, Mail, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { MapPin, Phone, Mail, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logo from "@/assets/logo.png";
 
@@ -171,8 +171,16 @@ const Footer = () => {
             <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
               <div className="flex items-center justify-center text-white/60 text-xs md:text-sm mb-4 md:mb-0">
                 <span>© 2025 Namah Events. Made with</span>
-                <Heart className="w-4 h-4 text-gold mx-1 fill-current" />
-                <span>for creating memorable experiences.</span>
+                <span className="mx-1 text-gold">❤️</span>
+                <span>by</span>
+                <a
+                  href="https://finzarc.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gold hover:text-gold/80 transition-colors duration-300 font-semibold ml-1 hover:underline"
+                >
+                  Finzarc
+                </a>
               </div>
 
               <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-xs md:text-sm">
