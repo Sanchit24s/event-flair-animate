@@ -50,7 +50,7 @@ const Footer = () => {
                   onClick={() => scrollToSection('hero')}
                   className="flex items-center gap-1 text-xl md:text-2xl font-playfair font-bold text-white hover:text-gold transition-colors duration-300"
                 >
-                  <img src={logo} alt="Namah Events Logo" className="w-8 h-8 object-contain" />
+                  <img src={logo} alt="Namah Events Logo" className="w-6 h-6 object-contain" />
                   <span className="text-primary-foreground">Namah</span>
                   <span className="text-gold"> Events</span>
                 </button>
