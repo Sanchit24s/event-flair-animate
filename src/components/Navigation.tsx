@@ -105,7 +105,7 @@ const Navigation = () => {
                 backgroundColor: isInHero
                   ? "rgba(255,255,255,0)"
                   : "rgba(255,255,255,1)",
-                padding: isInHero ? "0px" : "6px",
+                padding: isInHero ? "0px" : "2px",
                 borderRadius: isInHero ? "0px" : "9999px",
                 boxShadow: isInHero ? "none" : "0 4px 16px rgba(0,0,0,0.15)",
               }}

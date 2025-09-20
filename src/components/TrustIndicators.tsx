@@ -34,7 +34,7 @@ const TrustIndicators = () => {
         { value: "50+", label: "Events Planned" },
         { value: "98%", label: "Client Satisfaction" },
         { value: "5+", label: "Years Experience" },
-        { value: "24/7", label: "Support Available" },
+        { value: "80%", label: "Repeat Clients" },
     ];
 
     return (
