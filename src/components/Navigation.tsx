@@ -148,14 +148,6 @@ const Navigation = () => {
                   />
                 </button>
               ))}
-              <Button
-                onClick={() => navigate("/dashboard")}
-                className="ml-4 gold-gradient text-navy font-semibold hover:scale-105 transition-all duration-300"
-                size="sm"
-              >
-                <BarChart3 className="mr-2 h-4 w-4" />
-                Dashboard
-              </Button>
             </div>
           </div>
 
@@ -189,8 +181,8 @@ const Navigation = () => {
                 key={id}
                 onClick={() => scrollToSection(id)}
                 className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-300 ${activeSection === id
-                    ? "bg-gold/10 text-gold border border-gold/20"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gold"
+                  ? "bg-gold/10 text-gold border border-gold/20"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-gold"
                   }`}
               >
                 {label}
@@ -223,18 +215,6 @@ const Navigation = () => {
                 <Star className="w-5 h-5" />
                 Leave a Review
               </a>
-
-              <Button
-                onClick={() => {
-                  navigate("/dashboard");
-                  setIsMenuOpen(false);
-                }}
-                className="w-full gold-gradient text-navy font-semibold hover:scale-105 transition-all duration-300"
-                size="sm"
-              >
-                <BarChart3 className="mr-2 h-4 w-4" />
-                Dashboard
-              </Button>
             </div>
           </div>
         </motion.div>
