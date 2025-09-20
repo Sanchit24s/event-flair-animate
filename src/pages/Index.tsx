@@ -11,6 +11,7 @@ import CTASection from '@/components/CTASection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import TrustIndicators from '@/components/TrustIndicators';
+import FloatingActionButtons from '@/components/FloatingActionButtons';
 
 const Index = () => {
   useEffect(() => {
@@ -68,6 +69,7 @@ const Index = () => {
         <ContactSection />
       </main>
       <Footer />
+      <FloatingActionButtons />
     </div>
   );
 };

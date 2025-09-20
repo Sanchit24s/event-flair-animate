@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import { Menu, X, BarChart3 } from "lucide-react";
+import { Menu, X, BarChart3, MessageCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
+import ContactFormPopup from "./ContactFormPopUp";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isInHero, setIsInHero] = useState(true);
+  const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
   const navigate = useNavigate();
 
   const navLinks = [
@@ -170,6 +172,79 @@ const Navigation = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="lg:hidden bg-white/95 backdrop-blur-lg border-t border-gray-200/50 shadow-lg"
+        >
+          <div className="px-4 py-6 space-y-4">
+            {/* Navigation Links */}
+            {navLinks.map(({ id, label }) => (
+              <button
+                key={id}
+                onClick={() => scrollToSection(id)}
+                className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-300 ${activeSection === id
+                    ? "bg-gold/10 text-gold border border-gold/20"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gold"
+                  }`}
+              >
+                {label}
+              </button>
+            ))}
+
+            {/* Divider */}
+            <div className="border-t border-gray-200 my-4"></div>
+
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  setIsContactPopupOpen(true);
+                  setIsMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gold text-white rounded-lg font-semibold hover:bg-gold/90 transition-all duration-300 transform hover:scale-105"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Contact Us
+              </button>
+
+              <a
+                href="https://g.page/r/CT6dFN7jWajOEBM/review"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMenuOpen(false)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-navy text-white rounded-lg font-semibold hover:bg-navy/90 transition-all duration-300 transform hover:scale-105"
+              >
+                <Star className="w-5 h-5" />
+                Leave a Review
+              </a>
+
+              <Button
+                onClick={() => {
+                  navigate("/dashboard");
+                  setIsMenuOpen(false);
+                }}
+                className="w-full gold-gradient text-navy font-semibold hover:scale-105 transition-all duration-300"
+                size="sm"
+              >
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Dashboard
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Contact Form Popup */}
+      <ContactFormPopup
+        isOpen={isContactPopupOpen}
+        onClose={() => setIsContactPopupOpen(false)}
+      />
     </motion.nav>
   );
 };

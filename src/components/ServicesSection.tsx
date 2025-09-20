@@ -6,22 +6,17 @@ import {
   Camera,
   Utensils,
   Lightbulb,
-  MessageCircle,
-  Star,
 } from "lucide-react";
 import weddingEvent from "@/assets/wedding-event.jpg";
 import corporateEvent from "@/assets/corporate-event.jpg";
 import privateParty from "@/assets/private-party.jpg";
-import ContactFormPopup from "./ContactFormPopUp";
 
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const serviceCardsRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const mobileServiceRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const floatingButtonsRef = useRef<HTMLDivElement>(null);
   const [activeService, setActiveService] = useState(0);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
     const loadGSAP = async () => {
@@ -104,20 +99,6 @@ const ServicesSection = () => {
           anticipatePin: 1,
         });
 
-        // Pin floating buttons in desktop layout (same as image)
-        if (floatingButtonsRef.current) {
-
-        }
-
-        ScrollTrigger.create({
-          trigger: serviceCardsRef.current,
-          start: "top 20%",
-          end: () => `+=${serviceCardsRef.current.offsetHeight / 1.4}`,
-          pin: floatingButtonsRef.current,
-          pinSpacing: true,
-          scrub: true,
-          anticipatePin: 1,
-        });
 
         // Animate image on scroll
         gsap.fromTo(
@@ -306,29 +287,6 @@ const ServicesSection = () => {
 
             </div>
 
-            {/* Action Buttons below service cards */}
-            <div className="mt-12 flex justify-center gap-6">
-              <button
-                onClick={() => setIsPopupOpen(true)}
-                className="px-6 py-3 rounded-full bg-gold text-white font-semibold shadow-lg hover:bg-gold/90 transition-transform duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Contact Us
-              </button>
-              <a
-                href="https://g.page/r/CT6dFN7jWajOEBM/review"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-full bg-navy text-white font-semibold shadow-lg hover:bg-navy/90 transition-transform duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2"
-              >
-                <Star className="w-5 h-5" />
-                Leave a Review
-              </a>
-            </div>
-            <ContactFormPopup
-              isOpen={isPopupOpen}
-              onClose={() => setIsPopupOpen(false)}
-            />
           </div>
 
           {/* Right Column - Preview Image and Floating Buttons */}
@@ -408,25 +366,6 @@ const ServicesSection = () => {
             ))}
           </div>
 
-          {/* Action Buttons for Mobile (below service cards) */}
-          <div className="mt-10 flex justify-center gap-4">
-            <a
-              href="mailto:info@youreventsite.com"
-              className="flex-1 px-4 py-3 rounded-full bg-gold text-white font-semibold shadow-lg hover:bg-gold/90 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Contact Us
-            </a>
-            <a
-              href="https://g.page/your-google-review-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 px-4 py-3 rounded-full bg-navy text-white font-semibold shadow-lg hover:bg-navy/90 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
-            >
-              <Star className="w-5 h-5" />
-              Review
-            </a>
-          </div>
         </div>
       </div>
     </section>
