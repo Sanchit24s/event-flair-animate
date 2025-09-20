@@ -125,8 +125,8 @@ const ContactSection = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+91 95112 73300"],
-      link: "tel:+919511273300",
+      details: ["+91 89836 10687", "+91 98691 23601"],
+      link: null,
     },
     {
       icon: Mail,
@@ -301,20 +301,19 @@ const ContactSection = () => {
                     </h4>
                     {item.details.map((detail, idx) => (
                       <p key={idx} className="text-muted-foreground">
-                        {item.link && idx === 0 ? (
+                        {item.title === "Phone" ? (
+                          <a
+                            href={`tel:${detail.replace(/\s+/g, "")}`}
+                            className="hover:text-gold transition-colors duration-300"
+                          >
+                            {detail}
+                          </a>
+                        ) : item.link && idx === 0 ? (
                           <a
                             href={item.link}
                             className="hover:text-gold transition-colors duration-300"
-                            target={
-                              item.link.startsWith("http")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              item.link.startsWith("http")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
+                            target={item.link.startsWith("http") ? "_blank" : undefined}
+                            rel={item.link.startsWith("http") ? "noopener noreferrer" : undefined}
                           >
                             {detail}
                           </a>

@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { Heart, MapPin, Phone, Mail, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logo from "@/assets/logo.png";
 
@@ -125,12 +125,20 @@ const Footer = () => {
 
                 <div className="flex items-center justify-center md:justify-start">
                   <Phone className="w-5 h-5 text-gold mr-3" />
-                  <a
-                    href="tel:+919869123601"
-                    className="text-white/80 hover:text-gold transition-colors duration-300 text-sm md:text-base"
-                  >
-                    +91 95112 73300
-                  </a>
+                  <div className="flex flex-col space-y-1 text-sm md:text-base">
+                    <a
+                      href="tel:+918983610687"
+                      className="text-white/80 hover:text-gold transition-colors duration-300"
+                    >
+                      +91 89836 10687
+                    </a>
+                    <a
+                      href="tel:++919869123601"
+                      className="text-white/80 hover:text-gold transition-colors duration-300"
+                    >
+                      +91 9869123601
+                    </a>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-center md:justify-start">
@@ -168,29 +176,46 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-white/20">
           <div className="container-custom py-6">
-            <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-              <div className="flex items-center justify-center text-white/60 text-xs md:text-sm mb-4 md:mb-0">
-                <span>© 2025 Namah Events. Made with</span>
-                <span className="mx-1 text-gold">❤️</span>
-                <span>by</span>
-                <a
-                  href="https://finzarc.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold hover:text-gold/80 transition-colors duration-300 font-semibold ml-1 hover:underline"
-                >
-                  Finzarc
-                </a>
+            <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4 md:gap-0">
+
+              {/* Left Section */}
+              <div className="flex flex-col items-center md:items-start text-white/60 text-xs md:text-sm space-y-1">
+                <div className="flex flex-wrap items-center justify-center md:justify-start">
+                  <span>© 2025 Namah Events. Made with</span>
+                  <Heart className="w-4 h-4 text-gold mx-1 fill-current" />
+                  <span>for creating memorable experiences.</span>
+                </div>
+                <div className="text-center lg:pl-64 md:text-left">
+                  <a
+                    href="https://finzarc.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gold hover:underline"
+                  >
+                    by Finzarc
+                  </a>
+                </div>
               </div>
 
+
+              {/* Right Section */}
               <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-xs md:text-sm">
-                <a href="#" className="text-white/60 hover:text-gold transition-colors duration-300">
+                <a
+                  href="#"
+                  className="text-white/60 hover:text-gold transition-colors duration-300"
+                >
                   Privacy Policy
                 </a>
-                <a href="#" className="text-white/60 hover:text-gold transition-colors duration-300">
+                <a
+                  href="#"
+                  className="text-white/60 hover:text-gold transition-colors duration-300"
+                >
                   Terms of Service
                 </a>
-                <a href="#" className="text-white/60 hover:text-gold transition-colors duration-300">
+                <a
+                  href="#"
+                  className="text-white/60 hover:text-gold transition-colors duration-300"
+                >
                   Cookie Policy
                 </a>
               </div>

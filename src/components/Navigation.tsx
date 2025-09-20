@@ -104,7 +104,7 @@ const Navigation = () => {
               animate={{
                 backgroundColor: isInHero
                   ? "rgba(255,255,255,0)"
-                  : "rgba(255,255,255,0.8)",
+                  : "rgba(255,255,255,1)",
                 padding: isInHero ? "0px" : "6px",
                 borderRadius: isInHero ? "0px" : "9999px",
                 boxShadow: isInHero ? "none" : "0 4px 16px rgba(0,0,0,0.15)",
@@ -115,7 +115,7 @@ const Navigation = () => {
               <img
                 src={logo}
                 alt="Namah Events Logo"
-                className="w-8 h-8 object-contain"
+                className="w-6 h-6 object-contain"
               />
             </motion.div>
 
