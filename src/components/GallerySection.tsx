@@ -9,11 +9,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import bdayImage from "@/assets/birthday.jpg";
-import weddingImage from "@/assets/wedding.jpg";
-import gardenWeddingImage from "@/assets/garden-wedding.jpg";
-import anniversaryPartyImage from "@/assets/anniversary-party.jpg";
-import haldiImage from "@/assets/haldi.jpg";
-import receptionImage from "@/assets/reception.jpg";
+import casinoImage from "@/assets/Casino-night.jpg";
+import floralWeddingImage from "@/assets/Floral-Wedding-stage.jpg";
+import annualKickoffImage from "@/assets/Annual-Kickoff.jpg";
+import techConference from "@/assets/Tech-Conference.jpg";
+import corporatePerformanceImage from "@/assets/Corporate Performance.jpg";
+import yellowThemeFloralStageImage from "@/assets/Yellow-Themed-Floral-Stage.jpg";
+import tropicalWeddingImage from "@/assets/Tropical-Wedding-Mandap.jpg";
+import pockerNightImage from "@/assets/Poker-night-event.jpg";
 
 const GallerySection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -77,33 +80,48 @@ const GallerySection = () => {
 
   const galleryImages = [
     {
-      src: weddingImage,
-      title: "Elegant Wedding Reception",
+      src: tropicalWeddingImage,
+      title: "Tropical Wedding Mandap",
       category: "Wedding"
     },
     {
-      src: receptionImage,
-      title: "Grand Floral Stage",
+      src: floralWeddingImage,
+      title: "Floral Wedding Stage",
+      category: "Wedding"
+    },
+    {
+      src: pockerNightImage,
+      title: "Poker Night Event",
+      category: "Private Party"
+    },
+    {
+      src: casinoImage,
+      title: "Casino Night Entrance",
+      category: "Private Party"
+    },
+    {
+      src: yellowThemeFloralStageImage,
+      title: "Yellow Themed Floral Stage",
       category: "Reception"
+    },
+    {
+      src: corporatePerformanceImage,
+      title: "Corporate Performance Review",
+      category: "Corporate Event"
+    },
+    {
+      src: techConference,
+      title: "Tech Conference Entrance",
+      category: "Corporate Event"
+    },
+    {
+      src: annualKickoffImage,
+      title: "Annual Kickoff Interview",
+      category: "Corporate Event"
     },
     {
       src: bdayImage,
       title: "Birthday Celebration",
-      category: "Private Party"
-    },
-    {
-      src: gardenWeddingImage,
-      title: "Garden Wedding Ceremony",
-      category: "Pre-Wedding"
-    },
-    {
-      src: haldiImage,
-      title: "Traditional Haldi Ceremony",
-      category: "Pre-Wedding"
-    },
-    {
-      src: anniversaryPartyImage,
-      title: "Anniversary Party",
       category: "Private Party"
     }
   ];
