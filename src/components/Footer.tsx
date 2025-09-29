@@ -27,8 +27,8 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Facebook, href: '#', label: 'Facebook' },
+    { icon: Instagram, href: 'https://www.instagram.com/namaheventsofficial', label: 'Instagram' },
+    { icon: Facebook, href: 'https://www.facebook.com/share/1BPSqcQfGJ/?mibextid=wwXIfr', label: 'Facebook' },
   ];
 
   return (
@@ -67,6 +67,8 @@ const Footer = () => {
                   <a
                     key={social.label}
                     href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={social.label}
                     className="w-10 h-10 rounded-full bg-white/10 hover:bg-gold flex items-center justify-center transition-all duration-300 hover:scale-110"
                   >
