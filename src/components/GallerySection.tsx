@@ -102,7 +102,7 @@ const GallerySection = () => {
     {
       src: yellowThemeFloralStageImage,
       title: "Yellow Themed Floral Stage",
-      category: "Reception"
+      category: "Haldi"
     },
     {
       src: corporatePerformanceImage,

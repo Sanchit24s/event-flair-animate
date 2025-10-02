@@ -153,24 +153,6 @@ const Footer = () => {
                   </a>
                 </div>
               </div>
-
-              {/* Newsletter */}
-              <div className="mt-8">
-                <h4 className="font-semibold mb-3 text-white text-center md:text-left">Stay Updated</h4>
-                <p className="text-white/60 text-sm mb-4 text-center md:text-left">
-                  Subscribe to our newsletter for event tips and exclusive offers.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="flex-1 px-4 py-2 rounded-lg sm:rounded-l-lg sm:rounded-r-none bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-gold text-sm"
-                  />
-                  <Button className="gold-gradient text-navy px-6 rounded-lg sm:rounded-l-none sm:rounded-r-lg font-semibold hover:scale-105 transition-all duration-300 text-sm">
-                    Subscribe
-                  </Button>
-                </div>
-              </div>
             </div>
           </div>
         </div>

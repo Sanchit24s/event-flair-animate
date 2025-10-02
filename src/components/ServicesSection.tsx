@@ -271,7 +271,7 @@ const ServicesSection = () => {
                         {service.features.map((feature, idx) => (
                           <div key={idx} className="flex items-center text-sm">
                             <div
-                              className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors duration-300 ${activeService === index
+                              className={`w-2 h-2 rounded-full mr-3 transition-colors duration-300 flex-shrink-0 ${activeService === index
                                 ? "bg-gold"
                                 : "bg-muted-foreground group-hover:bg-gold"
                                 }`}
@@ -356,7 +356,7 @@ const ServicesSection = () => {
                   <div className="grid grid-cols-2 gap-2">
                     {service.features.map((feature, idx) => (
                       <div key={idx} className="flex items-center text-sm">
-                        <div className="w-1.5 h-1.5 rounded-full bg-gold mr-3"></div>
+                        <div className="w-2 h-2 rounded-full bg-gold mr-3 flex-shrink-0"></div>
                         <span className="text-muted-foreground">{feature}</span>
                       </div>
                     ))}
