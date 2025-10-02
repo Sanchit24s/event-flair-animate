@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, BarChart3, MessageCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import ContactFormPopup from "./ContactFormPopUp";
 
@@ -13,6 +13,10 @@ const Navigation = () => {
   const [isInHero, setIsInHero] = useState(true);
   const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if we're on a non-home page (like gallery)
+  const isOnHomePage = location.pathname === '/';
 
   const navLinks = [
     { id: "hero", label: "Home" },
@@ -29,8 +33,13 @@ const Navigation = () => {
     setIsScrolled(latest > 100);
   });
 
-  // Active section tracking
+  // Active section tracking (only on home page)
   useEffect(() => {
+    if (!isOnHomePage) {
+      setActiveSection(""); // Clear active section when not on home page
+      return;
+    }
+
     const observers: IntersectionObserver[] = [];
 
     navLinks.forEach(({ id }) => {
@@ -48,7 +57,7 @@ const Navigation = () => {
     });
 
     return () => observers.forEach((obs) => obs.disconnect());
-  }, []);
+  }, [isOnHomePage]);
 
   // Detect hero section
   useEffect(() => {
@@ -63,6 +72,13 @@ const Navigation = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
+    // If we're not on the home page, navigate to home first
+    if (window.location.pathname !== '/') {
+      navigate(`/#${sectionId}`);
+      setIsMenuOpen(false);
+      return;
+    }
+
     const element = document.getElementById(sectionId);
     if (element) element.scrollIntoView({ behavior: "smooth" });
     setIsMenuOpen(false);
@@ -82,14 +98,14 @@ const Navigation = () => {
         borderRadius: isScrolled ? 40 : 0,
       }}
       animate={{
-        backgroundColor: isScrolled
-          ? "hsla(217, 33%, 17%, 0.2)"
-          : "hsla(0, 0%, 0%, 0)",
-        backdropFilter: isScrolled ? "blur(16px)" : "blur(0px)",
-        boxShadow: isScrolled
+        backgroundColor: isScrolled || !isOnHomePage
+          ? "hsla(217, 33%, 17%, 0.95)" // Dark background when scrolled or on non-home pages
+          : "hsla(0, 0%, 0%, 0)", // Transparent when at top of home page
+        backdropFilter: isScrolled || !isOnHomePage ? "blur(16px)" : "blur(0px)",
+        boxShadow: isScrolled || !isOnHomePage
           ? "0 8px 32px hsla(217, 61%, 29%, 0.15)"
           : "none",
-        border: isScrolled
+        border: isScrolled || !isOnHomePage
           ? "1px solid hsla(217, 33%, 17%, 0.3)"
           : "1px solid transparent",
       }}
@@ -98,7 +114,10 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo (always rendered, background animated) */}
-          <div className="flex items-center gap-2 cursor-pointer">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => navigate('/')}
+          >
             {/* Animated Logo Only */}
             <motion.div
               animate={{

@@ -1,9 +1,18 @@
 import { Heart, MapPin, Phone, Mail, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   const scrollToSection = (sectionId: string) => {
+    // If we're not on the home page, navigate to home first
+    if (window.location.pathname !== '/') {
+      navigate(`/#${sectionId}`);
+      return;
+    }
+
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });

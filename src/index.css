@@ -142,6 +142,13 @@ All colors MUST be HSL.
   /* Smooth scrolling for all elements */
   html {
     scroll-behavior: smooth;
+    /* Prevent scroll restoration */
+    overscroll-behavior: none;
+  }
+
+  /* Prevent any scroll restoration during page transitions */
+  body {
+    overscroll-behavior: none;
   }
 
   /* Custom scrollbar */

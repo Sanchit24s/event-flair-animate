@@ -1,53 +1,49 @@
-import { useEffect, useRef } from 'react';
 import { Heart, Users, Award } from 'lucide-react';
+import { motion } from 'framer-motion';
 import founderImage from '@/assets/founder-image.jpg';
 
 const AboutSection = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  // Animation variants for Framer Motion
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.2,
+      }
+    }
+  };
 
-  useEffect(() => {
-    const loadGSAP = async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+  const imageVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.9,
+      x: -60
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      transition: {
+        duration: 1.2
+      }
+    }
+  };
 
-      gsap.registerPlugin(ScrollTrigger);
-
-      gsap.fromTo(imageRef.current,
-        { opacity: 0, scale: 0.9, x: -60 },
-        {
-          opacity: 1,
-          scale: 1,
-          x: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      gsap.fromTo(contentRef.current,
-        { opacity: 0, x: 60 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-    };
-
-    loadGSAP();
-  }, []);
+  const contentVariants = {
+    hidden: {
+      opacity: 0,
+      x: 60
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 1.2
+      }
+    }
+  };
 
   const stats = [
     { icon: Heart, number: "50+", label: "Memorable Events" },
@@ -56,12 +52,21 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" ref={sectionRef} className="section-padding bg-background">
+    <section id="about" className="section-padding bg-background">
       <div className="container-custom">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
+        <motion.div
+          className="grid lg:grid-cols-2 gap-8 items-center"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
 
           {/* Founder Image */}
-          <div ref={imageRef} className="relative flex flex-col lg:pl-32 items-start">
+          <motion.div
+            variants={imageVariants}
+            className="relative flex flex-col lg:pl-32 items-start"
+          >
             <div className="rounded-2xl overflow-hidden shadow-xl max-w-sm w-full">
               <img
                 src={founderImage}
@@ -73,10 +78,13 @@ const AboutSection = () => {
               <h4 className="font-semibold text-navy text-xl mb-1">Jimish R Shah</h4>
               <p className="text-muted-foreground">Founder</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Content */}
-          <div ref={contentRef} className="space-y-6">
+          <motion.div
+            variants={contentVariants}
+            className="space-y-6"
+          >
             <h2 className="font-playfair text-4xl lg:text-5xl font-bold text-navy leading-tight">
               Creating Moments That <span className="text-gold">Last Forever</span>
             </h2>
@@ -111,9 +119,9 @@ const AboutSection = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );

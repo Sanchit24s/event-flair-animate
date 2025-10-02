@@ -1,6 +1,8 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import {
   Carousel,
   CarouselContent,
@@ -19,59 +21,50 @@ import tropicalWeddingImage from "@/assets/Tropical-Wedding-Mandap.jpg";
 import pockerNightImage from "@/assets/Poker-night-event.jpg";
 
 const GallerySection = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const galleryRef = useRef<any>(null);
+  const navigate = useNavigate();
   const carouselApi = useRef<any>(null);
 
-  useEffect(() => {
-    const loadGSAP = async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+  // Animation variants
+  const headerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+      }
+    }
+  };
 
-      gsap.registerPlugin(ScrollTrigger);
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        delay: 0.3,
+      }
+    }
+  };
 
-      // Animate section header
-      gsap.fromTo(sectionRef.current?.querySelector('.gallery-header'),
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Animate gallery container
-      gsap.fromTo(sectionRef.current?.querySelector('.gallery-container'),
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          delay: 0.3,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-    };
-
-    loadGSAP();
-  }, []);
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        delay: 0.5,
+      }
+    }
+  };
 
   // Auto-scroll functionality
   useEffect(() => {
     const interval = setInterval(() => {
-      if (galleryRef.current?.api) {
-        galleryRef.current.api.scrollNext();
+      if (carouselApi.current) {
+        carouselApi.current.scrollNext();
       }
     }, 4000); // Auto-scroll every 4 seconds
 
@@ -142,10 +135,16 @@ const GallerySection = () => {
   }, []);
 
   return (
-    <section id="gallery" ref={sectionRef} className="section-padding bg-background">
+    <section id="gallery" className="section-padding bg-background">
       <div className="container-custom">
         {/* Header */}
-        <div className="gallery-header text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          variants={headerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-6">
             Event
             <span className="text-gold"> Gallery</span>
@@ -153,10 +152,16 @@ const GallerySection = () => {
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Explore our portfolio of beautifully crafted events that showcase our commitment to excellence and attention to detail.
           </p>
-        </div>
+        </motion.div>
 
         {/* Gallery Carousel */}
-        <div className="gallery-container">
+        <motion.div
+          className="gallery-container"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           <Carousel
             setApi={setApi}
             opts={{
@@ -201,19 +206,33 @@ const GallerySection = () => {
             <CarouselPrevious className="hidden md:flex -left-12 border-gold text-gold hover:bg-gold hover:text-white" />
             <CarouselNext className="hidden md:flex -right-12 border-gold text-gold hover:bg-gold hover:text-white" />
           </Carousel>
-        </div>
+        </motion.div>
 
         {/* View All Button */}
-        <div className="text-center mt-12">
+        <motion.div
+          className="text-center mt-12"
+          variants={buttonVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           <Button
             variant="outline"
             size="lg"
+            onClick={() => {
+              // Immediately scroll to top before navigation to prevent visible scrolling
+              document.documentElement.scrollTop = 0;
+              document.body.scrollTop = 0;
+              window.scrollTo(0, 0);
+              // Navigate immediately after scroll reset
+              navigate('/gallery');
+            }}
             className="border-gold text-gold hover:bg-gold hover:text-white px-8 py-3 transition-all duration-300"
           >
             View Full Portfolio
             <ExternalLink className="ml-2 h-5 w-5" />
           </Button>
-        </div>
+        </motion.div>
       </div>
 
     </section>

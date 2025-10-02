@@ -14,6 +14,7 @@ import TrustIndicators from '@/components/TrustIndicators';
 import FloatingActionButtons from '@/components/FloatingActionButtons';
 
 const Index = () => {
+
   useEffect(() => {
     // Initialize Lenis smooth scrolling
     const initSmoothScrolling = async () => {
@@ -52,6 +53,7 @@ const Index = () => {
       cleanup.then(cleanupFn => cleanupFn?.());
     };
   }, []);
+
 
   return (
     <div className="min-h-screen bg-background">
