@@ -232,22 +232,6 @@ export function ImageGallery() {
 
     return (
         <div className="relative w-full py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20 px-3 sm:px-4 md:px-6 lg:px-8 bg-background">
-            {/* Loading Progress Bar */}
-            {!isAllImagesLoaded && totalImages > 0 && (
-                <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                    <div className="flex items-center gap-3">
-                        <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-gold transition-all duration-300 ease-out"
-                                style={{ width: `${(imagesLoaded / totalImages) * 100}%` }}
-                            />
-                        </div>
-                        <span className="text-sm font-medium text-gray-700">
-                            {Math.round((imagesLoaded / totalImages) * 100)}%
-                        </span>
-                    </div>
-                </div>
-            )}
 
             {/* Mobile: Single column, Tablet: 2 columns, Desktop: 3 columns */}
             <div className="mx-auto grid w-full max-w-7xl gap-3 sm:gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
