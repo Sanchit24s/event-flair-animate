@@ -7,28 +7,14 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import FloatingActionButtons from '@/components/FloatingActionButtons';
 import ContactFormPopup from '@/components/ContactFormPopUp';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Gallery = () => {
     const navigate = useNavigate();
     const headerRef = useRef<HTMLDivElement>(null);
+    const galleryRef = useRef<HTMLDivElement>(null);
+    const ctaRef = useRef<HTMLDivElement>(null);
     const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
-
-    // Immediately scroll to top before DOM paint to prevent visible scrolling
-    useLayoutEffect(() => {
-        // Temporarily disable smooth scrolling for instant positioning
-        const originalScrollBehavior = document.documentElement.style.scrollBehavior;
-        document.documentElement.style.scrollBehavior = 'auto';
-
-        // Force scroll to top immediately
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-        window.scrollTo(0, 0);
-
-        // Restore smooth scrolling after positioning
-        setTimeout(() => {
-            document.documentElement.style.scrollBehavior = originalScrollBehavior;
-        }, 50);
-    }, []);
 
     useEffect(() => {
         const loadGSAP = async () => {
@@ -37,9 +23,12 @@ const Gallery = () => {
 
             gsap.registerPlugin(ScrollTrigger);
 
-            // Animate header on page load
+            // Create a timeline for smooth sequential animations
+            const tl = gsap.timeline({ delay: 0.2 });
+
+            // Animate header
             if (headerRef.current) {
-                gsap.fromTo(
+                tl.fromTo(
                     headerRef.current,
                     { opacity: 0, y: -30 },
                     {
@@ -50,13 +39,63 @@ const Gallery = () => {
                     }
                 );
             }
+
+            // Animate gallery content
+            if (galleryRef.current) {
+                tl.fromTo(
+                    galleryRef.current,
+                    { opacity: 0, y: 50 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        ease: "power3.out",
+                    },
+                    "-=0.4" // Start 0.4s before previous animation ends
+                );
+            }
+
+            // Animate CTA section
+            if (ctaRef.current) {
+                tl.fromTo(
+                    ctaRef.current,
+                    { opacity: 0, y: 30 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        ease: "power3.out",
+                    },
+                    "-=0.3" // Start 0.3s before previous animation ends
+                );
+            }
         };
 
         loadGSAP();
     }, []);
 
+    // Page transition variants
+    const pageVariants = {
+        initial: { opacity: 0 },
+        in: { opacity: 1 },
+        out: { opacity: 0 }
+    };
+
+    const pageTransition = {
+        type: "tween" as const,
+        ease: "anticipate" as const,
+        duration: 0.5
+    };
+
     return (
-        <div className="min-h-screen bg-background">
+        <motion.div
+            className="min-h-screen bg-background"
+            initial="initial"
+            animate="in"
+            exit="out"
+            variants={pageVariants}
+            transition={pageTransition}
+        >
             {/* Navigation */}
             <Navigation />
 
@@ -64,10 +103,10 @@ const Gallery = () => {
             <div
                 ref={headerRef}
                 className="pt-32 sm:pt-36 lg:pt-40 pb-6 sm:pb-8 md:pb-12 lg:pb-16 bg-background"
+                style={{ opacity: 0 }} // Start hidden for GSAP animation
             >
                 <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
                     <div className="text-center">
-
                         <h1 className="font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground mb-3 sm:mb-4 md:mb-6">
                             Event
                             <span className="text-gold"> Gallery</span>
@@ -80,10 +119,19 @@ const Gallery = () => {
             </div>
 
             {/* Gallery Content */}
-            <ImageGallery />
+            <div
+                ref={galleryRef}
+                style={{ opacity: 0 }} // Start hidden for GSAP animation
+            >
+                <ImageGallery />
+            </div>
 
             {/* Footer CTA */}
-            <div className="py-12 sm:py-16 lg:py-20 bg-muted/30">
+            <div
+                ref={ctaRef}
+                className="py-12 sm:py-16 lg:py-20 bg-muted/30"
+                style={{ opacity: 0 }} // Start hidden for GSAP animation
+            >
                 <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
                     <h2 className="font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6">
                         Ready to Create Your
@@ -105,15 +153,15 @@ const Gallery = () => {
             {/* Footer */}
             <Footer />
 
-            {/* Floating Action Buttons */}
+            {/* Floating Action Buttons - Always visible */}
             <FloatingActionButtons />
 
-            {/* Contact Form Popup */}
+            {/* Contact Form Popup - Always available */}
             <ContactFormPopup
                 isOpen={isContactPopupOpen}
                 onClose={() => setIsContactPopupOpen(false)}
             />
-        </div>
+        </motion.div>
     );
 };
 

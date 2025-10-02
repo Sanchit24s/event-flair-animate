@@ -220,11 +220,7 @@ const GallerySection = () => {
             variant="outline"
             size="lg"
             onClick={() => {
-              // Immediately scroll to top before navigation to prevent visible scrolling
-              document.documentElement.scrollTop = 0;
-              document.body.scrollTop = 0;
-              window.scrollTo(0, 0);
-              // Navigate immediately after scroll reset
+              // Navigate immediately without any delays
               navigate('/gallery');
             }}
             className="border-gold text-gold hover:bg-gold hover:text-white px-8 py-3 transition-all duration-300"

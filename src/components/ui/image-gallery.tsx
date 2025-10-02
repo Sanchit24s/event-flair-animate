@@ -34,6 +34,8 @@ import weddingEventImage from "@/assets/wedding-event.jpg";
 
 export function ImageGallery() {
     const [windowWidth, setWindowWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+    const [imagesLoaded, setImagesLoaded] = React.useState(0);
+    const [totalImages, setTotalImages] = React.useState(0);
 
     React.useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -217,8 +219,36 @@ export function ImageGallery() {
 
     const imageColumns = distributeImages();
 
+    // Set total images count
+    React.useEffect(() => {
+        setTotalImages(eventImages.length);
+    }, [eventImages.length]);
+
+    const handleImageLoad = React.useCallback(() => {
+        setImagesLoaded(prev => prev + 1);
+    }, []);
+
+    const isAllImagesLoaded = imagesLoaded >= totalImages;
+
     return (
         <div className="relative w-full py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20 px-3 sm:px-4 md:px-6 lg:px-8 bg-background">
+            {/* Loading Progress Bar */}
+            {!isAllImagesLoaded && totalImages > 0 && (
+                <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+                    <div className="flex items-center gap-3">
+                        <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-gold transition-all duration-300 ease-out"
+                                style={{ width: `${(imagesLoaded / totalImages) * 100}%` }}
+                            />
+                        </div>
+                        <span className="text-sm font-medium text-gray-700">
+                            {Math.round((imagesLoaded / totalImages) * 100)}%
+                        </span>
+                    </div>
+                </div>
+            )}
+
             {/* Mobile: Single column, Tablet: 2 columns, Desktop: 3 columns */}
             <div className="mx-auto grid w-full max-w-7xl gap-3 sm:gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {imageColumns.map((column, colIndex) => (
@@ -236,6 +266,7 @@ export function ImageGallery() {
                                     ratio={ratio}
                                     title={image.title}
                                     category={image.category}
+                                    onLoad={handleImageLoad}
                                 />
                             );
                         })}
@@ -253,12 +284,18 @@ interface AnimatedImageProps {
     ratio: number;
     title: string;
     category: string;
+    onLoad?: () => void;
 }
 
-function AnimatedImage({ alt, src, ratio, title, category }: AnimatedImageProps) {
+function AnimatedImage({ alt, src, ratio, title, category, onLoad }: AnimatedImageProps) {
     const ref = React.useRef(null);
     const isInView = useInView(ref, { once: true });
     const [isLoading, setIsLoading] = React.useState(true);
+
+    const handleImageLoad = React.useCallback(() => {
+        setIsLoading(false);
+        onLoad?.();
+    }, [onLoad]);
 
     return (
         <AspectRatio
@@ -275,7 +312,7 @@ function AnimatedImage({ alt, src, ratio, title, category }: AnimatedImageProps)
                         'opacity-100': isInView && !isLoading,
                     },
                 )}
-                onLoad={() => setIsLoading(false)}
+                onLoad={handleImageLoad}
                 loading="lazy"
             />
 
