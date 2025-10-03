@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
@@ -12,8 +12,10 @@ import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import TrustIndicators from '@/components/TrustIndicators';
 import FloatingActionButtons from '@/components/FloatingActionButtons';
+import ContactFormPopup from '@/components/ContactFormPopUp';
 
 const Index = () => {
+  const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
 
   useEffect(() => {
     // Initialize Lenis smooth scrolling
@@ -57,7 +59,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <Navigation onContactClick={() => setIsContactPopupOpen(true)} />
       <main>
         <HeroSection />
         <AboutSection />
@@ -72,6 +74,10 @@ const Index = () => {
       </main>
       <Footer />
       <FloatingActionButtons />
+      <ContactFormPopup
+        isOpen={isContactPopupOpen}
+        onClose={() => setIsContactPopupOpen(false)}
+      />
     </div>
   );
 };

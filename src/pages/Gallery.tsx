@@ -97,7 +97,7 @@ const Gallery = () => {
             transition={pageTransition}
         >
             {/* Navigation */}
-            <Navigation />
+            <Navigation onContactClick={() => setIsContactPopupOpen(true)} />
 
             {/* Page Header */}
             <div

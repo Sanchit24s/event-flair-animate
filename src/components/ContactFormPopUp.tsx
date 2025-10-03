@@ -65,8 +65,8 @@ const ContactFormPopup = ({ isOpen, onClose }: ContactFormPopupProps) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2 sm:px-6 md:px-8 py-4">
-            <div className="bg-white rounded-3xl shadow-2xl p-3 sm:p-5 md:p-6 w-full max-w-[calc(100%-1rem)] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[80vh] relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] px-2 sm:px-6 md:px-8 py-4 pt-24 sm:pt-20">
+            <div className="bg-white rounded-3xl shadow-2xl p-4 sm:p-5 md:p-6 w-full max-w-[calc(100%-1rem)] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[calc(100vh-10rem)] sm:max-h-[75vh] relative overflow-y-auto">
                 <button
                     onClick={onClose}
                     className="absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-500 hover:text-gray-700"

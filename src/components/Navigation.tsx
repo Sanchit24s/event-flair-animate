@@ -4,14 +4,16 @@ import { Button } from "@/components/ui/button";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "@/assets/logo.png";
-import ContactFormPopup from "./ContactFormPopUp";
 
-const Navigation = () => {
+interface NavigationProps {
+  onContactClick?: () => void;
+}
+
+const Navigation = ({ onContactClick }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isInHero, setIsInHero] = useState(true);
-  const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -86,7 +88,7 @@ const Navigation = () => {
 
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-40 transition-all duration-300"
       style={{
         top: isScrolled ? 16 : 0,
         left: isScrolled ? (window.innerWidth >= 1024 ? "12.5%" : "5%") : 0,
@@ -215,7 +217,7 @@ const Navigation = () => {
             <div className="space-y-3">
               <button
                 onClick={() => {
-                  setIsContactPopupOpen(true);
+                  onContactClick?.();
                   setIsMenuOpen(false);
                 }}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gold text-white rounded-lg font-semibold hover:bg-gold/90 transition-all duration-300 transform hover:scale-105"
@@ -239,11 +241,6 @@ const Navigation = () => {
         </motion.div>
       )}
 
-      {/* Contact Form Popup */}
-      <ContactFormPopup
-        isOpen={isContactPopupOpen}
-        onClose={() => setIsContactPopupOpen(false)}
-      />
     </motion.nav>
   );
 };
