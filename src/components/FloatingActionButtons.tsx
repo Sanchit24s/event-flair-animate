@@ -63,6 +63,27 @@ const FloatingActionButtons = () => {
                 </div>
             </div>
 
+            {/* Mobile Floating Action Buttons - Right Bottom */}
+            <div className="lg:hidden fixed bottom-6 right-6 z-40 flex flex-col gap-4">
+                {/* Contact Us Button */}
+                <button
+                    onClick={() => setIsPopupOpen(true)}
+                    className="w-14 h-14 bg-gold text-white rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 flex items-center justify-center"
+                >
+                    <MessageCircle className="w-6 h-6" />
+                </button>
+
+                {/* Leave a Review Button */}
+                <a
+                    href="https://g.page/r/CT6dFN7jWajOEBM/review"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-14 h-14 bg-navy text-white rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 flex items-center justify-center"
+                >
+                    <Star className="w-6 h-6" />
+                </a>
+            </div>
+
             {/* Contact Form Popup */}
             <ContactFormPopup
                 isOpen={isPopupOpen}

@@ -220,7 +220,7 @@ const GallerySection = () => {
             variant="outline"
             size="lg"
             onClick={() => {
-              // Navigate immediately without any delays
+              // Navigate to gallery page
               navigate('/gallery');
             }}
             className="border-gold text-gold hover:bg-gold hover:text-white px-8 py-3 transition-all duration-300"

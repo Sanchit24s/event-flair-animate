@@ -17,6 +17,17 @@ const Gallery = () => {
     const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
 
     useEffect(() => {
+        // Scroll to top when component mounts
+        window.scrollTo(0, 0);
+        if (document.documentElement) {
+            document.documentElement.scrollTop = 0;
+        }
+        if (document.body) {
+            document.body.scrollTop = 0;
+        }
+    }, []);
+
+    useEffect(() => {
         const loadGSAP = async () => {
             const { gsap } = await import('gsap');
             const { ScrollTrigger } = await import('gsap/ScrollTrigger');

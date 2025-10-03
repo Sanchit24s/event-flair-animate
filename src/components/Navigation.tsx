@@ -210,33 +210,6 @@ const Navigation = ({ onContactClick }: NavigationProps) => {
               </button>
             ))}
 
-            {/* Divider */}
-            <div className="border-t border-gray-200 my-4"></div>
-
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              <button
-                onClick={() => {
-                  onContactClick?.();
-                  setIsMenuOpen(false);
-                }}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gold text-white rounded-lg font-semibold hover:bg-gold/90 transition-all duration-300 transform hover:scale-105"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Contact Us
-              </button>
-
-              <a
-                href="https://g.page/r/CT6dFN7jWajOEBM/review"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMenuOpen(false)}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-navy text-white rounded-lg font-semibold hover:bg-navy/90 transition-all duration-300 transform hover:scale-105"
-              >
-                <Star className="w-5 h-5" />
-                Leave a Review
-              </a>
-            </div>
           </div>
         </motion.div>
       )}
