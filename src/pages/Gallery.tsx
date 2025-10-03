@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import FloatingActionButtons from '@/components/FloatingActionButtons';
 import ContactFormPopup from '@/components/ContactFormPopUp';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useVisitorTracking } from '@/hooks/useVisitorTracking';
 
 const Gallery = () => {
     const navigate = useNavigate();
@@ -15,6 +16,9 @@ const Gallery = () => {
     const galleryRef = useRef<HTMLDivElement>(null);
     const ctaRef = useRef<HTMLDivElement>(null);
     const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
+
+    // Automatic visitor tracking
+    const { isTracking, counts, isNewVisitor, error } = useVisitorTracking();
 
     useEffect(() => {
         // Scroll to top when component mounts

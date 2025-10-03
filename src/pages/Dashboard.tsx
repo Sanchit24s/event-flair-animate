@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { ContactSubmissionsTable } from "@/components/dashboard/ContactSubmissionsTable";
 import { SubmissionDetailsModal } from "@/components/dashboard/SubmissionDetailsModal";
 import { DateRangePicker } from "@/components/dashboard/DateRangePicker";
+import CompactVisitorCounter from "@/components/CompactVisitorCounter";
+import { useVisitorCounts } from "@/hooks/useVisitorTracking";
 import {
   getSubmissions,
   ContactSubmission,
@@ -28,6 +30,9 @@ const Dashboard = () => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const { toast } = useToast();
+
+  // Get visitor counts (no tracking in dashboard)
+  const { counts: visitorCounts, loading: visitorLoading } = useVisitorCounts();
 
   // Debounce search term to limit API calls while typing
   useEffect(() => {
@@ -116,6 +121,15 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <div className="container-custom py-8">
+        {/* Stats Row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <CompactVisitorCounter
+            counts={visitorCounts}
+            loading={visitorLoading}
+          />
+          <div className="md:col-span-2"></div>
+        </div>
+
         <DashboardFilters
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}

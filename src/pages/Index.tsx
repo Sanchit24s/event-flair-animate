@@ -13,9 +13,13 @@ import Footer from '@/components/Footer';
 import TrustIndicators from '@/components/TrustIndicators';
 import FloatingActionButtons from '@/components/FloatingActionButtons';
 import ContactFormPopup from '@/components/ContactFormPopUp';
+import { useVisitorTracking } from '@/hooks/useVisitorTracking';
 
 const Index = () => {
   const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
+
+  // Automatic visitor tracking
+  const { isTracking, counts, isNewVisitor, error } = useVisitorTracking();
 
   useEffect(() => {
     // Initialize Lenis smooth scrolling
@@ -74,6 +78,7 @@ const Index = () => {
       </main>
       <Footer />
       <FloatingActionButtons />
+
       <ContactFormPopup
         isOpen={isContactPopupOpen}
         onClose={() => setIsContactPopupOpen(false)}
