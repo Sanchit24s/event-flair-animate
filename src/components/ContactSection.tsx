@@ -125,7 +125,7 @@ const ContactSection = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+91 89836 10687", "+91 98691 23601"],
+      details: ["+91 80808 04405", "+91 98691 23601"],
       link: null,
     },
     {

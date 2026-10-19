@@ -119,10 +119,14 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  /* clip, not hidden: overflow-x: hidden on both html and body makes the body
+     its own scroll box, and with overscroll-behavior: none on it the wheel
+     could not reach the page, so the gallery would not scroll at all. clip
+     hides sideways overflow without creating a scroll box. */
   html,
   body {
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
@@ -146,10 +150,7 @@ All colors MUST be HSL.
     overscroll-behavior: none;
   }
 
-  /* Prevent any scroll restoration during page transitions */
-  body {
-    overscroll-behavior: none;
-  }
+  /* (overscroll-behavior: none on body removed: it blocked scroll chaining) */
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {

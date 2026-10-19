@@ -37,18 +37,21 @@ const Index = () => {
         wheelMultiplier: 1.2,
       });
 
+      // the loop stops with the page; it used to keep running after Lenis was destroyed
+      let frame = 0;
       function raf(time: number) {
         lenis.raf(time);
-        requestAnimationFrame(raf);
+        frame = requestAnimationFrame(raf);
       }
 
-      requestAnimationFrame(raf);
+      frame = requestAnimationFrame(raf);
 
       // Update ScrollTrigger on scroll
       lenis.on('scroll', ScrollTrigger.update);
 
       // Cleanup function
       return () => {
+        cancelAnimationFrame(frame);
         lenis.destroy();
       };
     };

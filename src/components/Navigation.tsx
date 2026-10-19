@@ -26,6 +26,7 @@ const Navigation = ({ onContactClick }: NavigationProps) => {
     { id: "services", label: "Services" },
     { id: "gallery", label: "Gallery" },
     { id: "process", label: "Process" },
+    { id: "reviews", label: "Reviews", path: "/reviews" },
     { id: "contact", label: "Contact" },
   ];
 
@@ -38,7 +39,8 @@ const Navigation = ({ onContactClick }: NavigationProps) => {
   // Active section tracking (only on home page)
   useEffect(() => {
     if (!isOnHomePage) {
-      setActiveSection(""); // Clear active section when not on home page
+      // on a page of its own, its menu item is the active one
+      setActiveSection(location.pathname === "/reviews" ? "reviews" : "");
       return;
     }
 
@@ -74,6 +76,13 @@ const Navigation = ({ onContactClick }: NavigationProps) => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
+    // a link with its own page goes there instead of scrolling
+    const page = navLinks.find((l) => l.id === sectionId && "path" in l) as { path?: string } | undefined;
+    if (page?.path) {
+      navigate(page.path);
+      setIsMenuOpen(false);
+      return;
+    }
     // If we're not on the home page, navigate to home first
     if (window.location.pathname !== '/') {
       navigate(`/#${sectionId}`);

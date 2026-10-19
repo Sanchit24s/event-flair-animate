@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
-import { useInView } from 'framer-motion';
+import { useInView, AnimatePresence, motion } from 'framer-motion';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 // Import actual event images
@@ -36,6 +38,9 @@ export function ImageGallery() {
     const [windowWidth, setWindowWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
     const [imagesLoaded, setImagesLoaded] = React.useState(0);
     const [totalImages, setTotalImages] = React.useState(0);
+    // which photo is open in the viewer, by its place in eventImages
+    const [openIndex, setOpenIndex] = React.useState<number | null>(null);
+    const lastTile = React.useRef<HTMLElement | null>(null);
 
     React.useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -210,9 +215,9 @@ export function ImageGallery() {
 
     // Distribute images into 3 columns
     const distributeImages = () => {
-        const columns: typeof eventImages[] = [[], [], []];
+        const columns: (typeof eventImages[number] & { index: number })[][] = [[], [], []];
         eventImages.forEach((image, index) => {
-            columns[index % 3].push(image);
+            columns[index % 3].push({ ...image, index });
         });
         return columns;
     };
@@ -251,13 +256,149 @@ export function ImageGallery() {
                                     title={image.title}
                                     category={image.category}
                                     onLoad={handleImageLoad}
+                                    onOpen={(el) => { lastTile.current = el; setOpenIndex(image.index); }}
                                 />
                             );
                         })}
                     </div>
                 ))}
             </div>
+
+            <Lightbox
+                images={eventImages}
+                index={openIndex}
+                onIndex={setOpenIndex}
+                onClose={() => {
+                    setOpenIndex(null);
+                    lastTile.current?.focus();
+                }}
+            />
         </div>
+    );
+}
+
+/* THE VIEWER. Opens the photo that was tapped, full screen, over everything.
+   Arrows, swipe or the keyboard move through the set; Escape, the close
+   button or a tap on the backdrop closes it. It is rendered into <body>,
+   because the gallery sits inside an animated (transformed) container, and a
+   fixed element inside a transformed one is not fixed to the screen. */
+interface LightboxProps {
+    images: { src: string; title: string; category: string }[];
+    index: number | null;
+    onIndex: (i: number) => void;
+    onClose: () => void;
+}
+
+function Lightbox({ images, index, onIndex, onClose }: LightboxProps) {
+    const open = index !== null;
+    const closeRef = React.useRef<HTMLButtonElement>(null);
+    const touchX = React.useRef<number | null>(null);
+    const n = images.length;
+    const go = React.useCallback((d: number) => {
+        if (index === null) return;
+        onIndex((index + d + n) % n);
+    }, [index, n, onIndex]);
+
+    // lock the page behind it, and listen for keys, only while open
+    React.useEffect(() => {
+        if (!open) return;
+        const root = document.documentElement;
+        const before = root.style.overflow;
+        root.style.overflow = 'hidden';
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+            else if (e.key === 'ArrowRight') go(1);
+            else if (e.key === 'ArrowLeft') go(-1);
+        };
+        window.addEventListener('keydown', onKey);
+        closeRef.current?.focus();
+        return () => {
+            root.style.overflow = before;
+            window.removeEventListener('keydown', onKey);
+        };
+    }, [open, go, onClose]);
+
+    // fetch the neighbours so the next photo is ready
+    React.useEffect(() => {
+        if (index === null) return;
+        [1, -1].forEach((d) => { const img = new Image(); img.src = images[(index + d + n) % n].src; });
+    }, [index, images, n]);
+
+    if (typeof document === 'undefined') return null;
+    const image = index !== null ? images[index] : null;
+
+    return createPortal(
+        <AnimatePresence>
+            {open && image && (
+                <motion.div
+                    key="lightbox"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={`${image.title}, photo ${index! + 1} of ${n}`}
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    onClick={onClose}
+                    onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
+                    onTouchEnd={(e) => {
+                        if (touchX.current === null) return;
+                        const dx = e.changedTouches[0].clientX - touchX.current;
+                        touchX.current = null;
+                        if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+                    }}
+                >
+                    <motion.figure
+                        key={image.src}
+                        className="relative flex max-h-full max-w-full flex-col items-center px-4 sm:px-16"
+                        initial={{ opacity: 0, scale: 0.97 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.25 }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <img
+                            src={image.src}
+                            alt={image.title}
+                            className="max-h-[78vh] sm:max-h-[84vh] max-w-[94vw] sm:max-w-[86vw] rounded-lg object-contain shadow-2xl select-none"
+                            draggable={false}
+                        />
+                        <figcaption className="mt-4 text-center text-white">
+                            <div className="text-xs uppercase tracking-wide text-gold">{image.category}</div>
+                            <div className="font-playfair text-lg sm:text-xl">{image.title}</div>
+                            <div className="mt-1 text-xs text-white/60">{index! + 1} / {n}</div>
+                        </figcaption>
+                    </motion.figure>
+
+                    <button
+                        ref={closeRef}
+                        type="button"
+                        aria-label="Close"
+                        onClick={(e) => { e.stopPropagation(); onClose(); }}
+                        className="absolute right-3 top-3 sm:right-6 sm:top-6 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+                    >
+                        <X className="h-6 w-6" />
+                    </button>
+                    <button
+                        type="button"
+                        aria-label="Previous photo"
+                        onClick={(e) => { e.stopPropagation(); go(-1); }}
+                        className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+                    >
+                        <ChevronLeft className="h-6 w-6" />
+                    </button>
+                    <button
+                        type="button"
+                        aria-label="Next photo"
+                        onClick={(e) => { e.stopPropagation(); go(1); }}
+                        className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+                    >
+                        <ChevronRight className="h-6 w-6" />
+                    </button>
+                </motion.div>
+            )}
+        </AnimatePresence>,
+        document.body,
     );
 }
 
@@ -269,9 +410,10 @@ interface AnimatedImageProps {
     title: string;
     category: string;
     onLoad?: () => void;
+    onOpen?: (el: HTMLElement) => void;
 }
 
-function AnimatedImage({ alt, src, ratio, title, category, onLoad }: AnimatedImageProps) {
+function AnimatedImage({ alt, src, ratio, title, category, onLoad, onOpen }: AnimatedImageProps) {
     const ref = React.useRef(null);
     const isInView = useInView(ref, { once: true });
     const [isLoading, setIsLoading] = React.useState(true);
@@ -285,7 +427,14 @@ function AnimatedImage({ alt, src, ratio, title, category, onLoad }: AnimatedIma
         <AspectRatio
             ref={ref}
             ratio={ratio}
-            className="bg-accent relative size-full rounded-lg sm:rounded-xl lg:rounded-2xl border group cursor-pointer overflow-hidden shadow-md hover:shadow-xl sm:hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]"
+            role="button"
+            tabIndex={0}
+            aria-label={`Open photo: ${title}`}
+            onClick={(e) => onOpen?.(e.currentTarget as HTMLElement)}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen?.(e.currentTarget as HTMLElement); }
+            }}
+            className="bg-accent relative size-full rounded-lg sm:rounded-xl lg:rounded-2xl border group cursor-pointer overflow-hidden shadow-md hover:shadow-xl sm:hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
         >
             <img
                 alt={alt}

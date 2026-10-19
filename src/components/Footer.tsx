@@ -7,6 +7,11 @@ const Footer = () => {
   const navigate = useNavigate();
 
   const scrollToSection = (sectionId: string) => {
+    // the reviews have a page of their own
+    if (sectionId === 'reviews') {
+      navigate('/reviews');
+      return;
+    }
     // If we're not on the home page, navigate to home first
     if (window.location.pathname !== '/') {
       navigate(`/#${sectionId}`);
@@ -24,7 +29,7 @@ const Footer = () => {
     { label: 'Services', id: 'services' },
     { label: 'Portfolio', id: 'gallery' },
     { label: 'Process', id: 'process' },
-    { label: 'Testimonials', id: 'testimonials' },
+    { label: 'Client Reviews', id: 'reviews' },
     { label: 'Contact', id: 'contact' }
   ];
 
@@ -138,16 +143,16 @@ const Footer = () => {
                   <Phone className="w-5 h-5 text-gold mr-3" />
                   <div className="flex flex-col space-y-1 text-sm md:text-base">
                     <a
-                      href="tel:+918983610687"
+                      href="tel:+918080804405"
                       className="text-white/80 hover:text-gold transition-colors duration-300"
                     >
-                      +91 89836 10687
+                      +91 80808 04405
                     </a>
                     <a
-                      href="tel:++919869123601"
+                      href="tel:+919869123601"
                       className="text-white/80 hover:text-gold transition-colors duration-300"
                     >
-                      +91 9869123601
+                      +91 98691 23601
                     </a>
                   </div>
                 </div>

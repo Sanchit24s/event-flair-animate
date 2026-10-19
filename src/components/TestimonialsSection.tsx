@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { googleReviews, averageRating, reviewCount, initials } from '@/data/googleReviews';
 
 const TestimonialsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadGSAP = async () => {
@@ -33,36 +36,12 @@ const TestimonialsSection = () => {
     loadGSAP();
   }, []);
 
-  const testimonials = [
-    {
-      name: "Sarah & Michael Johnson",
-      event: "Wedding",
-      rating: 5,
-      text: "Elegant Events made our dream wedding come true. Every detail was perfect, from the stunning floral arrangements to the seamless coordination. Our guests are still talking about how magical the evening was.",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-    },
-    {
-      name: "David Chen",
-      event: "Corporate Gala",
-      rating: 5,
-      text: "The professionalism and attention to detail exceeded our expectations. The team managed our annual gala for 500 attendees flawlessly. The event was sophisticated, engaging, and perfectly executed.",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-    },
-    {
-      name: "Maria Rodriguez",
-      event: "50th Birthday Party",
-      rating: 5,
-      text: "My birthday celebration was absolutely incredible! The team transformed the venue into a magical space that perfectly captured my vision. Every guest was amazed by the elegance and beauty of the event.",
-      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-    },
-    {
-      name: "Robert & Emma Wilson",
-      event: "25th Anniversary",
-      rating: 5,
-      text: "Celebrating our silver anniversary with Elegant Events was the best decision we made. They created an intimate yet grand celebration that honored our journey together. Simply unforgettable.",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-    }
-  ];
+  // Real Google reviews, in the clients' own words (see src/data/googleReviews.ts).
+  // The longest few carry the carousel; the full set is on /reviews.
+  const testimonials = googleReviews
+    .filter((r) => r.text.length > 60)
+    .slice(0, 6)
+    .map((r) => ({ name: r.author, event: "Google review", rating: r.rating, text: r.text }));
 
   const nextTestimonial = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -100,7 +79,7 @@ const TestimonialsSection = () => {
             <span className="text-gold"> Say</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Don't just take our word for it. Here's what our satisfied clients have to say about their experiences with Elegant Events.
+            Rated {averageRating.toFixed(1)} from {reviewCount} reviews on Google. Here is what our clients wrote, in their own words.
           </p>
         </div>
 
@@ -125,19 +104,20 @@ const TestimonialsSection = () => {
                     </div>
 
                     {/* Testimonial Text */}
-                    <blockquote className="text-xl lg:text-2xl text-navy font-playfair italic leading-relaxed mb-8 max-w-3xl mx-auto">
+                    <blockquote className="text-lg lg:text-xl text-navy font-playfair italic leading-relaxed mb-8 max-w-3xl mx-auto whitespace-pre-line line-clamp-[8]">
                       "{testimonial.text}"
                     </blockquote>
 
                     {/* Client Info */}
                     <div className="flex items-center justify-center">
-                      <img
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        className="w-16 h-16 rounded-full object-cover border-4 border-gold/20 mr-4"
-                      />
+                      <div
+                        aria-hidden="true"
+                        className="w-16 h-16 rounded-full bg-navy text-white flex items-center justify-center text-xl font-semibold border-4 border-gold/20 mr-4"
+                      >
+                        {initials(testimonial.name)}
+                      </div>
                       <div className="text-left">
-                        <div className="font-semibold text-navy text-lg">
+                        <div className="font-semibold text-navy text-lg capitalize">
                           {testimonial.name}
                         </div>
                         <div className="text-muted-foreground">
@@ -169,6 +149,17 @@ const TestimonialsSection = () => {
           >
             <ChevronRight className="w-5 h-5" />
           </Button>
+
+          {/* All the reviews */}
+          <div className="flex justify-center mt-6">
+            <Button
+              variant="outline"
+              onClick={() => navigate('/reviews')}
+              className="border-gold/40 hover:bg-gold hover:text-white"
+            >
+              Read all {reviewCount} Google reviews
+            </Button>
+          </div>
 
           {/* Dots Indicator */}
           <div className="flex justify-center mt-8 space-x-2">
